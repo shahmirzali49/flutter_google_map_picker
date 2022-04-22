@@ -65,7 +65,7 @@ class PlacePicker extends StatefulWidget {
     this.hidePlaceDetailsWhenDraggingPin = true,
     this.icon,
     this.iconColor,
-    this.label,
+    this.label,required this.textFieldTopSize,
     this.labelText,
     this.labelStyle,
     this.floatingLabelStyle,
@@ -134,6 +134,7 @@ class PlacePicker extends StatefulWidget {
   final ValueChanged<String>? onGeocodingSearchFailed;
   final int autoCompleteDebounceInMilliseconds;
   final int cameraMoveDebounceInMilliseconds;
+  final double textFieldTopSize;
 
   final MapType initialMapType;
   final bool enableMapTypeButton;
@@ -389,10 +390,7 @@ class _PlacePickerState extends State<PlacePicker> {
                   titleSpacing: 0.0,
                   title: _buildSearchBar(context),
                 ),
-                body: SafeArea(
-                  bottom: false,
-                  child: _buildMapWithLocation(),
-                ),
+                body: _buildMapWithLocation(),
                 //  SafeArea(
                 //   bottom: false,
                 //   child: Stack(children: [
@@ -452,6 +450,7 @@ class _PlacePickerState extends State<PlacePicker> {
         Expanded(
           child: AutoCompleteSearch(
               appBarKey: appBarKey,
+              textFieldTopSize: widget.textFieldTopSize,
               isInScaffoldBodyAndHasAppBar: widget.isInScaffoldBodyAndHasAppBar,
               borderRadius: widget.borderRadius,
               searchBarController: searchBarController,

@@ -43,6 +43,7 @@ class AutoCompleteSearch extends StatefulWidget {
     this.helperMaxLines,
     this.hintStyle,
     this.hintTextDirection,
+    required this.textFieldTopSize,
     this.hintMaxLines,
     this.errorText,
     this.errorStyle,
@@ -160,7 +161,7 @@ class AutoCompleteSearch extends StatefulWidget {
   final Widget? suffixIcon;
 
   final Widget? suffix;
-
+  final double textFieldTopSize;
   final String? suffixText;
 
   final TextStyle? suffixStyle;
@@ -212,6 +213,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
   FocusNode focus = FocusNode();
   OverlayEntry? overlayEntry;
   SearchProvider provider = SearchProvider();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -258,9 +260,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         // padding: const EdgeInsets.only(right: 10),
 
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.black54
-              : Colors.white,
+          color: Theme.of(context).brightness == Brightness.dark ? Colors.black54 : Colors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -268,8 +268,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
               spreadRadius: 3,
             ),
           ],
-          borderRadius: widget.borderRadius ??
-              BorderRadius.circular(widget.inputHeight ?? 20),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(widget.inputHeight ?? 20),
         ),
 
         // elevation: 8.0,
@@ -292,11 +291,11 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     return TextField(
       controller: controller,
       focusNode: focus,
+      key: _formKey,
       decoration: InputDecoration(
         hintText: widget.hintText,
         // border: widget.border ?? InputBorder.none,
-        border:
-            widget.border ?? OutlineInputBorder(borderSide: BorderSide.none),
+        border: widget.border ?? OutlineInputBorder(borderSide: BorderSide.none),
         isDense: true,
         contentPadding: widget.contentPadding,
         alignLabelWithHint: widget.alignLabelWithHint,
@@ -360,9 +359,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
                 child: widget.suffixIcon ??
                     Icon(
                       Icons.clear,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
                     ),
                 onTap: () {
                   clearText();
@@ -392,8 +389,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
       return;
     }
 
-    if (!widget.autocompleteOnTrailingWhitespace! &&
-        controller.text.substring(controller.text.length - 1) == " ") {
+    if (!widget.autocompleteOnTrailingWhitespace! && controller.text.substring(controller.text.length - 1) == " ") {
       provider.debounceTimer?.cancel();
       return;
     }
@@ -402,8 +398,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
       provider.debounceTimer!.cancel();
     }
 
-    provider.debounceTimer =
-        Timer(Duration(milliseconds: widget.debounceMilliseconds!), () {
+    provider.debounceTimer = Timer(Duration(milliseconds: widget.debounceMilliseconds!), () {
       _searchPlace(controller.text.trim());
     });
   }
@@ -447,9 +442,10 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         // ignore: unnecessary_null_comparison
-        top: widget.isInScaffoldBodyAndHasAppBar
-            ? MediaQuery.of(context).size.height * widget.height / 20 * 0.1
-            : MediaQuery.of(context).size.height * widget.height / 30 * 0.1,
+        top: widget.textFieldTopSize,
+        // widget.isInScaffoldBodyAndHasAppBar
+        //     ? MediaQuery.of(context).size.height * widget.height / 20 * 0.1
+        //     : MediaQuery.of(context).size.height * widget.height / 30 * 0.1,
         // widget.height != null
         //     ? MediaQuery.of(context).size.height * widget.height / 50 * 0.1
         //     : MediaQuery.of(context).size.height * 0.10,
@@ -459,9 +455,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         child: Material(
           elevation: 4.0,
           borderRadius: BorderRadius.circular(8.0),
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.black
-              : Colors.white,
+          color: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white,
           child: overlayChild,
         ),
       ),
@@ -512,8 +506,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     PlaceProvider provider = PlaceProvider.of(context, listen: false);
 
     if (searchTerm.isNotEmpty) {
-      final PlacesAutocompleteResponse response =
-          await provider.places.autocomplete(
+      final PlacesAutocompleteResponse response = await provider.places.autocomplete(
         searchTerm,
         sessionToken: widget.sessionToken,
         location: provider.currentPosition == null
@@ -531,8 +524,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         region: widget.region,
       );
 
-      if (response.errorMessage?.isNotEmpty == true ||
-          response.status == "REQUEST_DENIED") {
+      if (response.errorMessage?.isNotEmpty == true || response.status == "REQUEST_DENIED") {
         if (widget.onSearchFailed != null) {
           widget.onSearchFailed!(response.status);
         }

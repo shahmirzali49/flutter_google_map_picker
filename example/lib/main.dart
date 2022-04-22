@@ -60,55 +60,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _panelHeightOpen = MediaQuery.of(context).size.height * .70;
+    // _panelHeightOpen = MediaQuery.of(context).size.height * .70;
 
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: <Widget>[
-        SlidingUpPanel(
-          maxHeight: _panelHeightOpen,
-          minHeight: _panelHeightClosed,
-          parallaxEnabled: true,
-          isDraggable: false,
-          parallaxOffset: .5,
-          controller: controller,
-          body: _body(),
-          panelBuilder: (sc) => _panel(sc),
-          // borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
-          // onPanelSlide: (double pos) => setState(() {
-          //   _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) + _initFabHeight;
-          // }),
-        ),
-
-        // the fab
-        Positioned(
-          right: 20.0,
-          bottom: _fabHeight,
-          child: FloatingActionButton(
-            child: Icon(
-              Icons.gps_fixed,
-              color: Theme.of(context).primaryColor,
-            ),
-            onPressed: () {
-              controller.open();
-            },
-            backgroundColor: Colors.white,
-          ),
-        ),
-
-        // Positioned(
-        //     top: 0,
-        //     child: ClipRRect(
-        //         child: BackdropFilter(
-        //             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        //             child: Container(
-        //               width: MediaQuery.of(context).size.width,
-        //               height: MediaQuery.of(context).padding.top,
-        //               color: Color.fromARGB(0, 150, 20, 20),
-        //             )))),
-
-        //the SlidingUpPanel Title
-      ],
+    return PlacePicker(
+      apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
+      initialPosition: LatLng(-33.8567844, 151.213108),
+      useCurrentLocation: true,
+      textFieldTopSize: MediaQuery.of(context).padding.top,
+      selectInitialPosition: true,
+      // isInScaffoldBodyAndHasAppBar: false,
+      // border: OutlineInputBorder(),
+      // enabledBorder: OutlineInputBorder(),
+      height: 40.0,
+      strictbounds: false,
+      // borderRadius: BorderRadius.circular(5.0),
+      //usePlaceDetailSearch: true,
+      onPlacePicked: (result) {
+        Navigator.of(context).pop();
+        setState(() {});
+      },
+      //forceSearchOnZoomChanged: true,
+      automaticallyImplyAppBarLeading: false, appBarBackgroundColor: Colors.blue,
     );
   }
 
@@ -125,8 +97,9 @@ class _HomePageState extends State<HomePage> {
     return PlacePicker(
       apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
       initialPosition: LatLng(-33.8567844, 151.213108),
-      useCurrentLocation: false,
+      useCurrentLocation: false, appBarBackgroundColor: Colors.blue,
       selectInitialPosition: true,
+      textFieldTopSize: 50,
       hintText: "Mahallle, sokak veya cadde ara",
       // forceAndroidLocationManager: true,
 
@@ -147,7 +120,7 @@ class _HomePageState extends State<HomePage> {
       },
       // forceSearchOnZoomChanged: true,
       isInScaffoldBodyAndHasAppBar: false,
-      automaticallyImplyAppBarLeading: false, appBarBackgroundColor: Colors.amber,
+      automaticallyImplyAppBarLeading: false,
       //selectInitialPosition: true,
       // selectedPlaceWidgetBuilder: (_, selectedPlace, state, isSearchBarFocused) {
       //   print("state: $state, isSearchBarFocused: $isSearchBarFocused");
