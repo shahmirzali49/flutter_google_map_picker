@@ -31,6 +31,7 @@ class PlacePicker extends StatefulWidget {
     this.hintText,
     this.searchingText,
     // this.searchBarHeight,
+    this.resizeToAvoidBottomInset,
     // this.contentPadding,
     this.onAutoCompleteFailed,
     this.onGeocodingSearchFailed,
@@ -55,8 +56,7 @@ class PlacePicker extends StatefulWidget {
     this.strictbounds,
     this.region,
     this.selectInitialPosition = false,
-    this.resizeToAvoidBottomInset = true,
-    this.initialSearchString,
+     this.initialSearchString,
     this.searchForInitialValue = false,
     this.forceAndroidLocationManager = false,
     this.forceSearchOnZoomChanged = false,
@@ -159,8 +159,8 @@ class PlacePicker extends StatefulWidget {
   /// scaffold, the body can be resized to avoid overlapping the keyboard, which
   /// prevents widgets inside the body from being obscured by the keyboard.
   ///
-  /// Defaults to true.
-  final bool resizeToAvoidBottomInset;
+
+
 
   final bool selectInitialPosition;
 
@@ -224,6 +224,8 @@ class PlacePicker extends StatefulWidget {
   final Color? iconColor;
 
   final Widget? label;
+
+  final bool? resizeToAvoidBottomInset;
 
   final String? labelText;
 
@@ -375,7 +377,9 @@ class _PlacePickerState extends State<PlacePicker> {
               child: Scaffold(
                 key: ValueKey<int>(provider.hashCode),
                 // resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+                resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
                 // extendBodyBehindAppBar: true,
+
                 appBar: AppBar(
                   key: appBarKey,
                   automaticallyImplyLeading: false,
