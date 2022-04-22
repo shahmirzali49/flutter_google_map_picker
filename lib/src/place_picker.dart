@@ -46,6 +46,7 @@ class PlacePicker extends StatefulWidget {
     this.myLocationButtonCooldown = 10,
     this.usePinPointingSearch = true,
     this.usePlaceDetailSearch = false,
+    required this.appBarBackgroundColor,
     this.autocompleteOffset,
     this.autocompleteRadius,
     this.autocompleteLanguage,
@@ -121,7 +122,7 @@ class PlacePicker extends StatefulWidget {
   final LatLng initialPosition;
   final bool? useCurrentLocation;
   final LocationAccuracy desiredLocationAccuracy;
-
+  final Color appBarBackgroundColor;
   final MapCreatedCallback? onMapCreated;
 
   final String? hintText;
@@ -380,7 +381,7 @@ class _PlacePickerState extends State<PlacePicker> {
                   automaticallyImplyLeading: false,
                   iconTheme: Theme.of(context).iconTheme,
                   elevation: 0,
-                  // backgroundColor: Colors.transparent,
+                  backgroundColor: widget.appBarBackgroundColor,
                   titleSpacing: 0.0,
                   title: _buildSearchBar(context),
                 ),
@@ -626,9 +627,8 @@ class _PlacePickerState extends State<PlacePicker> {
       },
       onMyLocation: () async {
         // Prevent to click many times in short period.
-           log("isOnUpdateLocationCooldown ${provider!.isOnUpdateLocationCooldown}");
+        log("isOnUpdateLocationCooldown ${provider!.isOnUpdateLocationCooldown}");
         if (provider!.isOnUpdateLocationCooldown == false) {
-       
           provider!.isOnUpdateLocationCooldown = true;
           Timer(Duration(seconds: widget.myLocationButtonCooldown), () {
             provider!.isOnUpdateLocationCooldown = false;

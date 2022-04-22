@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
       },
       // forceSearchOnZoomChanged: true,
       isInScaffoldBodyAndHasAppBar: false,
-      automaticallyImplyAppBarLeading: false,
+      automaticallyImplyAppBarLeading: false, appBarBackgroundColor: Colors.amber,
       //selectInitialPosition: true,
       // selectedPlaceWidgetBuilder: (_, selectedPlace, state, isSearchBarFocused) {
       //   print("state: $state, isSearchBarFocused: $isSearchBarFocused");
