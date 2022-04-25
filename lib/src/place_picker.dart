@@ -56,7 +56,7 @@ class PlacePicker extends StatefulWidget {
     this.strictbounds,
     this.region,
     this.selectInitialPosition = false,
-     this.initialSearchString,
+    this.initialSearchString,
     this.searchForInitialValue = false,
     this.forceAndroidLocationManager = false,
     this.forceSearchOnZoomChanged = false,
@@ -65,7 +65,8 @@ class PlacePicker extends StatefulWidget {
     this.hidePlaceDetailsWhenDraggingPin = true,
     this.icon,
     this.iconColor,
-    this.label,required this.textFieldTopSize,
+    this.label,
+    required this.textFieldTopSize,
     this.labelText,
     this.labelStyle,
     this.floatingLabelStyle,
@@ -78,6 +79,7 @@ class PlacePicker extends StatefulWidget {
     this.errorText,
     this.errorStyle,
     this.errorMaxLines,
+    this.googleMapOntap,
     this.floatingLabelBehavior,
     this.floatingLabelAlignment,
     this.isCollapsed = false,
@@ -129,7 +131,7 @@ class PlacePicker extends StatefulWidget {
   final String? searchingText;
   // final double searchBarHeight;
   // final EdgeInsetsGeometry contentPadding;
-
+  final void Function(LatLng)? googleMapOntap;
   final ValueChanged<String>? onAutoCompleteFailed;
   final ValueChanged<String>? onGeocodingSearchFailed;
   final int autoCompleteDebounceInMilliseconds;
@@ -160,8 +162,6 @@ class PlacePicker extends StatefulWidget {
   /// scaffold, the body can be resized to avoid overlapping the keyboard, which
   /// prevents widgets inside the body from being obscured by the keyboard.
   ///
-
-
 
   final bool selectInitialPosition;
 
@@ -618,6 +618,7 @@ class _PlacePickerState extends State<PlacePicker> {
       debounceMilliseconds: widget.cameraMoveDebounceInMilliseconds,
       enableMapTypeButton: widget.enableMapTypeButton,
       enableMyLocationButton: widget.enableMyLocationButton,
+      googleMapOntap: widget.googleMapOntap,
       usePinPointingSearch: widget.usePinPointingSearch,
       usePlaceDetailSearch: widget.usePlaceDetailSearch,
       onMapCreated: widget.onMapCreated,

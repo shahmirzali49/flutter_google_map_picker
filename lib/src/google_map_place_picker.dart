@@ -41,6 +41,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
     this.enableMapTypeButton,
     this.enableMyLocationButton,
     this.onToggleMapType,
+    this.googleMapOntap,
     this.onMyLocation,
     this.onPlacePicked,
     this.usePinPointingSearch,
@@ -63,6 +64,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
   final MapCreatedCallback? onMapCreated;
   final VoidCallback? onToggleMapType;
   final VoidCallback? onMyLocation;
+  final void Function(LatLng)? googleMapOntap;
   final ValueChanged<PickResult>? onPlacePicked;
 
   final int? debounceMilliseconds;
@@ -95,7 +97,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
       Location(lat: provider.cameraPosition!.target.latitude, lng: provider.cameraPosition!.target.longitude),
       language: language,
     );
- 
+
     if (response.errorMessage?.isNotEmpty == true || response.status == "REQUEST_DENIED") {
       print("Camera Location Search Error: " + response.errorMessage!);
       if (onSearchFailed != null) {
@@ -110,7 +112,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
         response.results[0].placeId,
         language: language,
       );
-       if (detailResponse.errorMessage?.isNotEmpty == true || detailResponse.status == "REQUEST_DENIED") {
+      if (detailResponse.errorMessage?.isNotEmpty == true || detailResponse.status == "REQUEST_DENIED") {
         print("Fetching details by placeId Error: " + detailResponse.errorMessage!);
         if (onSearchFailed != null) {
           onSearchFailed!(detailResponse.status);
@@ -123,7 +125,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
       log("message 1 ${provider.selectedPlace?.formattedAddress}");
     } else {
       provider.selectedPlace = PickResult.fromGeocodingResult(response.results[0]);
- 
+
       log("message  2 ${provider.selectedPlace?.formattedAddress}");
     }
 
@@ -156,7 +158,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
             initialCameraPosition: initialCameraPosition,
             mapType: data,
             myLocationEnabled: true,
-
+            onTap: googleMapOntap,
             onMapCreated: (GoogleMapController controller) {
               provider.mapController = controller;
               provider.setCameraPosition(null);

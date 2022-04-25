@@ -418,7 +418,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
 
     _clearOverlay();
 
-    if (searchTerm.length < 1) return;
+    if (searchTerm.length < 3) return;
 
     _displayOverlay(_buildSearchingOverlay());
 
