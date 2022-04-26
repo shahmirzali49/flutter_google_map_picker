@@ -157,6 +157,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
             mapToolbarEnabled: false,
             initialCameraPosition: initialCameraPosition,
             mapType: data,
+
             myLocationEnabled: true,
             onTap: googleMapOntap,
             onMapCreated: (GoogleMapController controller) {
@@ -378,9 +379,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
     return Positioned(
       // top: appBarRenderBox.size.height,
-      top: height != null
-          ? MediaQuery.of(context).size.height * height! / 50 * 0.1
-          : MediaQuery.of(context).size.height * 0.10,
+      top: MediaQuery.of(context).size.height * 0.05,
       right: 15,
       child: Column(
         children: <Widget>[

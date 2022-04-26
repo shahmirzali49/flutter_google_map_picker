@@ -584,7 +584,7 @@ class _PlacePickerState extends State<PlacePicker> {
           future: provider!.updateCurrentLocation(widget.forceAndroidLocationManager),
           builder: (context, snap) {
             if (snap.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: Colors.indigo,));
             } else {
               if (provider!.currentPosition == null) {
                 return _buildMap(widget.initialPosition);
