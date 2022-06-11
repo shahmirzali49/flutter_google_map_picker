@@ -9,7 +9,7 @@ import '../src/place_picker.dart';
 import 'package:google_maps_webservice/geocoding.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart';
- import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class PlaceProvider extends ChangeNotifier {
   PlaceProvider(
@@ -24,7 +24,7 @@ class PlaceProvider extends ChangeNotifier {
       httpClient: httpClient,
       apiHeaders: apiHeaders as Map<String, String>?,
     );
- 
+
     geocoding = GoogleMapsGeocoding(
       apiKey: apiKey,
       baseUrl: proxyBaseUrl,
@@ -47,8 +47,7 @@ class PlaceProvider extends ChangeNotifier {
     log("updateCurrentLocation ");
     try {
       await Geolocator.requestPermission();
-      // await Permission.location.request();
-     LocationPermission permission = await Geolocator.checkPermission();
+      LocationPermission permission = await Geolocator.checkPermission();
       if (permission != LocationPermission.denied) {
         currentPosition =
             await Geolocator.getCurrentPosition(desiredAccuracy: desiredAccuracy ?? LocationAccuracy.best);
