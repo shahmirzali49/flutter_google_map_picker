@@ -44,10 +44,11 @@ class PlaceProvider extends ChangeNotifier {
   bool isAutoCompleteSearching = false;
 
   Future<void> updateCurrentLocation(bool forceAndroidLocationManager) async {
-    log("updateCurrentLocation ");
+   
     try {
       await Geolocator.requestPermission();
       LocationPermission permission = await Geolocator.checkPermission();
+       log("updateCurrentLocation ${permission.name}");
       if (permission != LocationPermission.denied) {
         currentPosition =
             await Geolocator.getCurrentPosition(desiredAccuracy: desiredAccuracy ?? LocationAccuracy.best);
