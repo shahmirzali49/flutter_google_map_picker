@@ -111,12 +111,12 @@ class PlaceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ButtonState _buttonState = ButtonState.UseThisAddress;
-  ButtonState get buttonState => _buttonState;
-  set buttonState(ButtonState newState) {
-    _buttonState = newState;
-    notifyListeners();
-  }
+  // ButtonState _buttonState = ButtonState.UseThisAddress;
+  // ButtonState get buttonState => _buttonState;
+  // set buttonState(ButtonState newState) {
+  //   _buttonState = newState;
+  //   notifyListeners();
+  // }
 
   GoogleMapController? _mapController;
   GoogleMapController? get mapController => _mapController;

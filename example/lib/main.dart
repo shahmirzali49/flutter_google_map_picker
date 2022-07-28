@@ -86,13 +86,11 @@ class _HomePageState extends State<HomePage> {
                           //usePlaceDetailSearch: true,
                           onPlacePicked: (result) {
                             selectedPlace = result;
-                            print(" onPlacePicked ${result.formattedAddress}");
+                            print(" onPlacePicked ${result?.formattedAddress}");
                             // Navigator.of(context).pop();
                             // setState(() {});
                           },
-                          onAddressVerified: () {
-                            print("onAddressVerified OnCLICKED");
-                          },
+                          
                           //forceSearchOnZoomChanged: true,
                           automaticallyImplyAppBarLeading: false,
                           appBarBackgroundColor: const Color(0xffEE724B),

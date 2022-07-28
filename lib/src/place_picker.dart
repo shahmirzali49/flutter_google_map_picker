@@ -21,7 +21,7 @@ enum PinState { Preparing, Idle, Dragging }
 
 enum SearchingState { Idle, Searching, FirstTime }
 
-enum ButtonState { Idle, Searching, FirstTime, UseThisAddress, VerifyAddress }
+// enum ButtonState { Idle, Searching, FirstTime, UseThisAddress, VerifyAddress }
 
 class PlacePicker extends StatefulWidget {
   PlacePicker({
@@ -42,7 +42,6 @@ class PlacePicker extends StatefulWidget {
     this.proxyBaseUrl,
     this.httpClient,
     this.selectedPlaceWidgetBuilder,
-    this.onAddressVerified,
     this.pinBuilder,
     this.autoCompleteDebounceInMilliseconds = 500,
     this.cameraMoveDebounceInMilliseconds = 750,
@@ -174,8 +173,7 @@ class PlacePicker extends StatefulWidget {
   ///
   /// If you managed to use your own [selectedPlaceWidgetBuilder], then this WILL NOT be invoked, and you need use data which is
   /// being sent with [selectedPlaceWidgetBuilder].
-  final ValueChanged<PickResult>? onPlacePicked;
-  final Function()? onAddressVerified;
+  final ValueChanged<PickResult?>? onPlacePicked;
 
   /// optional - builds selected place's UI
   ///
@@ -453,19 +451,18 @@ class _PlacePickerState extends State<PlacePicker> {
                         ),
                       ),
                       child: Text(
-                        placeProvider.buttonState == ButtonState.UseThisAddress ? "Bu Adresi Kullan" : "Adresi Dogrula",
+                     "Bu Adresi Kullan"  ,
                         style: TextStyle(fontSize: 16),
                       ),
                       onPressed: placeProvider.placeSearchingState == SearchingState.Searching
                           ? null
-                          : placeProvider.buttonState == ButtonState.UseThisAddress
-                              ? () {
+                          : () {
                                   // searchByCameraLocationPLACEPICKER(provider!);
                                   print("CLICKED onPressed Bu Adresi Kullan");
-                                  widget.onPlacePicked!(provider!.selectedPlace!);
-                                  placeProvider.buttonState = ButtonState.VerifyAddress;
-                                }
-                              : widget.onAddressVerified,
+                                  widget.onPlacePicked!(provider?.selectedPlace);
+                                 
+                                },
+                      
                     );
                   }),
                 ),
