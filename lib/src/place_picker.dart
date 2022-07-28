@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/geocoding.dart';
 import '../google_maps_places_picker.dart';
 import '../providers/place_provider.dart';
 import '../src/autocomplete_search.dart';
@@ -17,7 +18,10 @@ import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
 
 enum PinState { Preparing, Idle, Dragging }
-enum SearchingState { Idle, Searching }
+
+enum SearchingState { Idle, Searching, FirstTime }
+
+enum ButtonState { Idle, Searching, FirstTime, UseThisAddress, VerifyAddress }
 
 class PlacePicker extends StatefulWidget {
   PlacePicker({
@@ -38,6 +42,7 @@ class PlacePicker extends StatefulWidget {
     this.proxyBaseUrl,
     this.httpClient,
     this.selectedPlaceWidgetBuilder,
+    this.onAddressVerified,
     this.pinBuilder,
     this.autoCompleteDebounceInMilliseconds = 500,
     this.cameraMoveDebounceInMilliseconds = 750,
@@ -170,6 +175,7 @@ class PlacePicker extends StatefulWidget {
   /// If you managed to use your own [selectedPlaceWidgetBuilder], then this WILL NOT be invoked, and you need use data which is
   /// being sent with [selectedPlaceWidgetBuilder].
   final ValueChanged<PickResult>? onPlacePicked;
+  final Function()? onAddressVerified;
 
   /// optional - builds selected place's UI
   ///
@@ -329,9 +335,16 @@ class _PlacePickerState extends State<PlacePicker> {
   PlaceProvider? provider;
   SearchBarController searchBarController = SearchBarController();
 
+  late final double bottomPadding;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (duration) {
+        bottomPadding = MediaQuery.of(context).padding.bottom;
+      },
+    );
 
     _futureProvider = _initPlaceProvider();
   }
@@ -360,6 +373,7 @@ class _PlacePickerState extends State<PlacePicker> {
 
   @override
   Widget build(BuildContext context) {
+    // final myProviderPlaceSearchingState = context.watch<PlaceProvider>().placeSearchingState;
     return WillPopScope(
       onWillPop: () {
         searchBarController.clearOverlay();
@@ -380,7 +394,7 @@ class _PlacePickerState extends State<PlacePicker> {
                 // resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
                 resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
                 // extendBodyBehindAppBar: true,
-
+                // backgroundColor: Colors.red,
                 appBar: AppBar(
                   key: appBarKey,
                   automaticallyImplyLeading: false,
@@ -391,6 +405,71 @@ class _PlacePickerState extends State<PlacePicker> {
                   title: _buildSearchBar(context),
                 ),
                 body: _buildMapWithLocation(),
+
+                bottomNavigationBar: Container(
+                  padding: EdgeInsets.only(
+                    bottom: 20 +
+                        (bottomPadding != 0.0
+                            ? MediaQuery.of(context).padding.bottom / 3
+                            : MediaQuery.of(context).padding.bottom),
+                    left: 20,
+                    right: 20,
+                    top: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    // color: appColorScheme?.white50,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, -1),
+                      ),
+                    ],
+                  ),
+                  child: Consumer<PlaceProvider>(builder: (context, placeProvider, _) {
+                    return ElevatedButton(
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                        ),
+
+                        // fixedSize: MaterialStateProperty.all(
+                        //   Size(100, 100),
+                        // ),
+                        // minimumSize: MaterialStateProperty.all(
+                        //   Size(100, 100),
+                        // ),
+                        // maximumSize: MaterialStateProperty.all(
+                        //   Size(100, 100),
+                        // ),
+                        backgroundColor: placeProvider.placeSearchingState == SearchingState.Searching
+                            ? null
+                            : MaterialStateProperty.all(const Color(0xffEE724B)),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7.0),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        placeProvider.buttonState == ButtonState.UseThisAddress ? "Bu Adresi Kullan" : "Adresi Dogrula",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      onPressed: placeProvider.placeSearchingState == SearchingState.Searching
+                          ? null
+                          : placeProvider.buttonState == ButtonState.UseThisAddress
+                              ? () {
+                                  // searchByCameraLocationPLACEPICKER(provider!);
+                                  print("CLICKED onPressed Bu Adresi Kullan");
+                                  widget.onPlacePicked!(provider!.selectedPlace!);
+                                  placeProvider.buttonState = ButtonState.VerifyAddress;
+                                }
+                              : widget.onAddressVerified,
+                    );
+                  }),
+                ),
+
                 //  SafeArea(
                 //   bottom: false,
                 //   child: Stack(children: [
@@ -584,7 +663,10 @@ class _PlacePickerState extends State<PlacePicker> {
           future: provider!.updateCurrentLocation(widget.forceAndroidLocationManager),
           builder: (context, snap) {
             if (snap.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator(color: Colors.indigo,));
+              return const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.indigo,
+              ));
             } else {
               if (provider!.currentPosition == null) {
                 return _buildMap(widget.initialPosition);
@@ -643,6 +725,7 @@ class _PlacePickerState extends State<PlacePicker> {
       },
       onMoveStart: () {
         searchBarController.reset();
+        print(" on Move Start ${provider!.placeSearchingState}");
       },
       onPlacePicked: widget.onPlacePicked,
     );

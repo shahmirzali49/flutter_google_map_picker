@@ -44,20 +44,26 @@ class PlaceProvider extends ChangeNotifier {
   bool isAutoCompleteSearching = false;
 
   Future<void> updateCurrentLocation(bool forceAndroidLocationManager) async {
-   
     try {
       await Geolocator.requestPermission();
       LocationPermission permission = await Geolocator.checkPermission();
-       log("updateCurrentLocation ${permission.name}");
+      log("updateCurrentLocation ${permission.name}");
       if (permission != LocationPermission.denied) {
         currentPosition =
             await Geolocator.getCurrentPosition(desiredAccuracy: desiredAccuracy ?? LocationAccuracy.best);
-        log("currentPosition $currentPosition");
+        // await Future.delayed(const Duration(seconds: 3));
+        final GeocodingResponse response = await geocoding.searchByLocation(
+          Location(lat: currentPosition!.latitude, lng: currentPosition!.longitude),
+          language: 'tr',
+        );
+        selectedPlace = PickResult.fromGeocodingResult(response.results[0]);
+        log("Geolocator.getCurrentPosition currentPosition $currentPosition");
       } else {
         currentPosition = null;
+        print("ELSE PROBLEM ");
       }
     } catch (e) {
-      print(e);
+      print("CATCH PROBLEM $e");
       currentPosition = null;
     }
 
@@ -102,6 +108,13 @@ class PlaceProvider extends ChangeNotifier {
   SearchingState get placeSearchingState => _placeSearchingState;
   set placeSearchingState(SearchingState newState) {
     _placeSearchingState = newState;
+    notifyListeners();
+  }
+
+  ButtonState _buttonState = ButtonState.UseThisAddress;
+  ButtonState get buttonState => _buttonState;
+  set buttonState(ButtonState newState) {
+    _buttonState = newState;
     notifyListeners();
   }
 

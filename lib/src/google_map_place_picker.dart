@@ -81,7 +81,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
   final bool? forceSearchOnZoomChanged;
   final bool? hidePlaceDetailsWhenDraggingPin;
 
-  _searchByCameraLocation(PlaceProvider provider) async {
+  _searchByCameraLocation(PlaceProvider provider, {SearchingState? searchingState}) async {
     // We don't want to search location again if camera location is changed by zooming in/out.
     if (forceSearchOnZoomChanged == false &&
         provider.prevCameraPosition != null &&
@@ -129,7 +129,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
       log("message  2 ${provider.selectedPlace?.formattedAddress}");
     }
 
-    provider.placeSearchingState = SearchingState.Idle;
+    provider.placeSearchingState = searchingState ?? SearchingState.Idle;
   }
 
   @override
@@ -168,7 +168,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
               // When select initialPosition set to true.
               if (selectInitialPosition!) {
                 provider.setCameraPosition(initialCameraPosition);
-                _searchByCameraLocation(provider);
+                _searchByCameraLocation(provider, searchingState: SearchingState.FirstTime);
               }
             },
             onCameraIdle: () {
@@ -205,14 +205,16 @@ class GoogleMapPlacePicker extends StatelessWidget {
               provider.pinState = PinState.Dragging;
 
               // Begins the search state if the hide details is enabled
-              if (this.hidePlaceDetailsWhenDraggingPin!) {
-                provider.placeSearchingState = SearchingState.Searching;
-              }
+              // if (this.hidePlaceDetailsWhenDraggingPin!) {
+              provider.placeSearchingState = SearchingState.Searching;
+              print("SearchingState ${provider.placeSearchingState}");
+              // }
 
               onMoveStart!();
             },
             onCameraMove: (CameraPosition position) {
               provider.setCameraPosition(position);
+              print("SearchingState ${provider.placeSearchingState}");
             },
             // gestureRecognizers make it possible to navigate the map when it's a
             // child in a scroll view e.g ListView, SingleChildScrollView...
@@ -295,14 +297,17 @@ class GoogleMapPlacePicker extends StatelessWidget {
       selector: (_, provider) =>
           Tuple4(provider.selectedPlace, provider.placeSearchingState, provider.isSearchBarFocused, provider.pinState),
       builder: (context, data, __) {
-        if ((data.item1 == null && data.item2 == SearchingState.Idle) ||
+        if ((data.item1 == null) ||
             data.item3 == true ||
             data.item4 == PinState.Dragging && this.hidePlaceDetailsWhenDraggingPin!) {
-          return Container();
+          log("Container ${data.item1} $selectedPlaceWidgetBuilder");
+          return SizedBox.shrink();
         } else {
           if (selectedPlaceWidgetBuilder == null) {
+            log("selectedPlaceWidgetBuilder $selectedPlaceWidgetBuilder");
             return _defaultPlaceWidgetBuilder(context, data.item1, data.item2);
           } else {
+            log("else selectedPlaceWidgetBuilder $selectedPlaceWidgetBuilder");
             return Builder(
                 builder: (builderContext) =>
                     selectedPlaceWidgetBuilder!(builderContext, data.item1, data.item2, data.item3));
@@ -314,14 +319,18 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
   Widget _defaultPlaceWidgetBuilder(BuildContext context, PickResult? data, SearchingState state) {
     return FloatingCard(
-      bottomPosition: MediaQuery.of(context).size.height * 0.05,
-      leftPosition: MediaQuery.of(context).size.width * 0.025,
-      rightPosition: MediaQuery.of(context).size.width * 0.025,
-      width: MediaQuery.of(context).size.width * 0.9,
+      bottomPosition: MediaQuery.of(context).size.height * 0.01,
+      leftPosition: MediaQuery.of(context).size.width * 0.04,
+      rightPosition: MediaQuery.of(context).size.width * 0.04,
+      width: MediaQuery.of(context).size.width,
       borderRadius: BorderRadius.circular(12.0),
-      elevation: 4.0,
+      // elevation: 4.0,
       color: Theme.of(context).cardColor,
-      child: state == SearchingState.Searching ? _buildLoadingIndicator() : _buildSelectionDetails(context, data!),
+      child: state == SearchingState.FirstTime
+          ? SizedBox.shrink()
+          : state == SearchingState.Searching
+              ? _buildLoadingIndicator()
+              : _buildSelectionDetails(context, data!),
     );
   }
 
@@ -342,32 +351,33 @@ class GoogleMapPlacePicker extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(10),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
             result.formattedAddress!,
             style: TextStyle(fontSize: 18),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 10),
-          ElevatedButton(
-            style: ButtonStyle(
-              padding: MaterialStateProperty.all(
-                EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              ),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-              ),
-            ),
-            child: Text(
-              "Select here",
-              style: TextStyle(fontSize: 16),
-            ),
-            onPressed: () {
-              onPlacePicked!(result);
-            },
-          ),
+
+          // ElevatedButton(
+          //   style: ButtonStyle(
+          //     padding: MaterialStateProperty.all(
+          //       EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          //     ),
+          //     shape: MaterialStateProperty.all(
+          //       RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(4.0),
+          //       ),
+          //     ),
+          //   ),
+          //   child: Text(
+          //     "Select here",
+          //     style: TextStyle(fontSize: 16),
+          //   ),
+          //   onPressed: () {
+          //     onPlacePicked!(result);
+          //   },
+          // ),
         ],
       ),
     );

@@ -251,7 +251,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
       child: Container(
         height: widget.inputHeight ?? widget.height,
         margin: const EdgeInsets.only(
-          right: 10,
+          right: 5,
           // bottom: 10.0,
           // top: 10.0,
         ),
@@ -260,7 +260,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         // padding: const EdgeInsets.only(right: 10),
 
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark ? Colors.black54 : Colors.white,
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -268,7 +268,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
               spreadRadius: 3,
             ),
           ],
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(widget.inputHeight ?? 20),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
         ),
 
         // elevation: 8.0,
@@ -353,13 +353,14 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         selector: (_, provider) => provider.searchTerm,
         builder: (_, data, __) {
           if (data.length > 0) {
+            print("data.length ${data.length}");
             return Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: GestureDetector(
                 child: widget.suffixIcon ??
                     Icon(
                       Icons.clear,
-                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                      color: Colors.deepOrangeAccent,
                     ),
                 onTap: () {
                   clearText();
@@ -367,7 +368,8 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
               ),
             );
           } else {
-            return SizedBox(width: 10);
+            print("ELSE data.length ${data.length}");
+            return SizedBox(width: 40);
           }
         });
   }
