@@ -29,7 +29,7 @@ typedef PinBuilder = Widget Function(
 class GoogleMapPlacePicker extends StatelessWidget {
   const GoogleMapPlacePicker({
     Key? key,
-    required this.initialTarget,
+    required this.initialCameraPosition,
     required this.appBarKey,
     this.selectedPlaceWidgetBuilder,
     this.pinBuilder,
@@ -52,7 +52,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
     this.hidePlaceDetailsWhenDraggingPin,
   }) : super(key: key);
 
-  final LatLng initialTarget;
+  final CameraPosition initialCameraPosition;
   final double? height;
   final GlobalKey appBarKey;
 
@@ -149,7 +149,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
         selector: (_, provider) => provider.mapType,
         builder: (_, data, __) {
           PlaceProvider provider = PlaceProvider.of(context, listen: false);
-          CameraPosition initialCameraPosition = CameraPosition(target: initialTarget, zoom: 15);
+          // CameraPosition initialCameraPosition = CameraPosition(target: initialTarget, zoom: initialZoom);
 
           return GoogleMap(
             myLocationButtonEnabled: false,
@@ -207,14 +207,14 @@ class GoogleMapPlacePicker extends StatelessWidget {
               // Begins the search state if the hide details is enabled
               // if (this.hidePlaceDetailsWhenDraggingPin!) {
               provider.placeSearchingState = SearchingState.Searching;
-              print("SearchingState ${provider.placeSearchingState}");
+              // print("SearchingState ${provider.placeSearchingState}");
               // }
 
               onMoveStart!();
             },
             onCameraMove: (CameraPosition position) {
               provider.setCameraPosition(position);
-              print("SearchingState ${provider.placeSearchingState}");
+              // print("SearchingState ${provider.placeSearchingState}");
             },
             // gestureRecognizers make it possible to navigate the map when it's a
             // child in a scroll view e.g ListView, SingleChildScrollView...

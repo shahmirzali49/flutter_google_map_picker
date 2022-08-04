@@ -28,7 +28,7 @@ class PlacePicker extends StatefulWidget {
     Key? key,
     required this.apiKey,
     this.onPlacePicked,
-    required this.initialPosition,
+    required this.initialCameraPosition,
     this.useCurrentLocation,
     this.desiredLocationAccuracy = LocationAccuracy.high,
     this.onMapCreated,
@@ -125,7 +125,7 @@ class PlacePicker extends StatefulWidget {
   final bool isInScaffoldBodyAndHasAppBar;
   final String apiKey;
   final BorderRadiusGeometry? borderRadius;
-  final LatLng initialPosition;
+  final CameraPosition initialCameraPosition;
   final bool? useCurrentLocation;
   final LocationAccuracy desiredLocationAccuracy;
   final Color appBarBackgroundColor;
@@ -451,18 +451,16 @@ class _PlacePickerState extends State<PlacePicker> {
                         ),
                       ),
                       child: Text(
-                     "Bu Adresi Kullan"  ,
+                        "Bu Adresi Kullan",
                         style: TextStyle(fontSize: 16),
                       ),
                       onPressed: placeProvider.placeSearchingState == SearchingState.Searching
                           ? null
                           : () {
-                                  // searchByCameraLocationPLACEPICKER(provider!);
-                                  print("CLICKED onPressed Bu Adresi Kullan");
-                                  widget.onPlacePicked!(provider?.selectedPlace);
-                                 
-                                },
-                      
+                              // searchByCameraLocationPLACEPICKER(provider!);
+                              print("CLICKED onPressed Bu Adresi Kullan");
+                              widget.onPlacePicked!(provider?.selectedPlace);
+                            },
                     );
                   }),
                 ),
@@ -666,9 +664,14 @@ class _PlacePickerState extends State<PlacePicker> {
               ));
             } else {
               if (provider!.currentPosition == null) {
-                return _buildMap(widget.initialPosition);
+                return _buildMap(widget.initialCameraPosition);
               } else {
-                return _buildMap(LatLng(provider!.currentPosition!.latitude, provider!.currentPosition!.longitude));
+                return _buildMap(
+                  CameraPosition(
+                    target: LatLng(provider!.currentPosition!.latitude, provider!.currentPosition!.longitude),
+                    zoom: widget.initialCameraPosition.zoom,
+                  ),
+                );
               }
             }
           });
@@ -679,16 +682,16 @@ class _PlacePickerState extends State<PlacePicker> {
           if (snap.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            return _buildMap(widget.initialPosition);
+            return _buildMap(widget.initialCameraPosition);
           }
         },
       );
     }
   }
 
-  Widget _buildMap(LatLng initialTarget) {
+  Widget _buildMap(CameraPosition initialCameraPosition) {
     return GoogleMapPlacePicker(
-      initialTarget: initialTarget,
+      initialCameraPosition: initialCameraPosition,
       appBarKey: appBarKey,
       height: widget.height,
       selectedPlaceWidgetBuilder: widget.selectedPlaceWidgetBuilder,
@@ -722,7 +725,7 @@ class _PlacePickerState extends State<PlacePicker> {
       },
       onMoveStart: () {
         searchBarController.reset();
-        print(" on Move Start ${provider!.placeSearchingState}");
+        // print(" on Move Start ${provider!.placeSearchingState}");
       },
       onPlacePicked: widget.onPlacePicked,
     );
