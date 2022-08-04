@@ -64,7 +64,8 @@ class _HomePageState extends State<HomePage> {
 
     return PlacePicker(
       apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
-      initialPosition: LatLng(-33.8567844, 151.213108),
+         initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
+
       useCurrentLocation: true,
       textFieldTopSize: MediaQuery.of(context).padding.top,
       selectInitialPosition: true,
@@ -96,7 +97,7 @@ class _HomePageState extends State<HomePage> {
   Widget _body() {
     return PlacePicker(
       apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
-      initialPosition: LatLng(-33.8567844, 151.213108),
+     initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
       useCurrentLocation: false, appBarBackgroundColor: Colors.blue,
       selectInitialPosition: true,
       textFieldTopSize: 50,
@@ -110,7 +111,9 @@ class _HomePageState extends State<HomePage> {
       // usePlaceDetailSearch: true,
       onPlacePicked: (result) {
         // selectedPlace = result;
-        log("${result.addressComponents![0].longName}-");
+        
+
+        log("${result?.addressComponents![0].longName}-");
         // Navigator.of(context).pop();
         // setState(() {
         // ref.read(_heightProvider.state).state = 0.3;

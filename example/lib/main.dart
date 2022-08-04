@@ -74,7 +74,10 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) {
                         return PlacePicker(
                           apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
-                          initialPosition: LatLng(40.596697, 43.1017874),
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(40.596697, 43.1017874),
+                          ),
+
                           useCurrentLocation: false,
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                           selectInitialPosition: true,
@@ -90,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                             // Navigator.of(context).pop();
                             // setState(() {});
                           },
-                          
+
                           //forceSearchOnZoomChanged: true,
                           automaticallyImplyAppBarLeading: false,
                           appBarBackgroundColor: const Color(0xffEE724B),
