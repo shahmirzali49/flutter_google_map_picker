@@ -48,6 +48,7 @@ class PlacePicker extends StatefulWidget {
     this.initialMapType = MapType.normal,
     this.enableMapTypeButton = true,
     this.enableMyLocationButton = true,
+    this.onMoveStart,
     this.myLocationButtonCooldown = 10,
     this.usePinPointingSearch = true,
     this.usePlaceDetailSearch = false,
@@ -136,6 +137,7 @@ class PlacePicker extends StatefulWidget {
   // final double searchBarHeight;
   // final EdgeInsetsGeometry contentPadding;
   final void Function(LatLng)? googleMapOntap;
+  void Function()? onMoveStart;
   final ValueChanged<String>? onAutoCompleteFailed;
   final ValueChanged<String>? onGeocodingSearchFailed;
   final int autoCompleteDebounceInMilliseconds;
@@ -726,6 +728,9 @@ class _PlacePickerState extends State<PlacePicker> {
       onMoveStart: () {
         searchBarController.reset();
         // print(" on Move Start ${provider!.placeSearchingState}");
+        if (widget.onMoveStart != null) {
+          widget.onMoveStart!();
+        }
       },
       onPlacePicked: widget.onPlacePicked,
     );
