@@ -1,8 +1,18 @@
+import 'dart:developer';
+
+import 'package:example/map_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_places_picker/google_maps_places_picker.dart';
 
-void main() => runApp(MyApp());
+void main() {
+   return runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
@@ -72,37 +82,43 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return PlacePicker(
-                          apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(40.596697, 43.1017874),
-                          ),
+                        return MapPage();
+                        
+                  //        PlacePicker(
+                  //         apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
+                  //         initialCameraPosition: CameraPosition(
+                  //           target: LatLng(40.596697, 43.1017874),
+                  //           zoom: 11,
+                  //         ),
+                  //         onMoveStart: () {
+                  //           log("object   widget.onMoveStart!() ");
+                  //         },
+                  //         useCurrentLocation: false,
+                  //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  //         selectInitialPosition: true,
+                  //         // isInScaffoldBodyAndHasAppBar: ,
+                  //         // isInScaffoldBodyAndHasAppBar: false,
+                  //         // border: OutlineInputBorder(),
+                  //         // enabledBorder: OutlineInputBorder(),
+                  //         // height: 40.0,
+                  //         // borderRadius: BorderRadius.circular(5.0),
+                  //         //usePlaceDetailSearch: true,
+                  //         onPlacePicked: (result) {
+                  //           selectedPlace = result;
+                  //           print(" onPlacePicked ${result?.formattedAddress}");
+                  //           // Navigator.of(context).pop();
+                  //           // setState(() {});
+                  //         },
 
-                          useCurrentLocation: false,
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          selectInitialPosition: true,
-                          // isInScaffoldBodyAndHasAppBar: false,
-                          // border: OutlineInputBorder(),
-                          // enabledBorder: OutlineInputBorder(),
-                          // height: 40.0,
-                          // borderRadius: BorderRadius.circular(5.0),
-                          //usePlaceDetailSearch: true,
-                          onPlacePicked: (result) {
-                            selectedPlace = result;
-                            print(" onPlacePicked ${result?.formattedAddress}");
-                            // Navigator.of(context).pop();
-                            // setState(() {});
-                          },
-
-                          //forceSearchOnZoomChanged: true,
-                          automaticallyImplyAppBarLeading: false,
-                          appBarBackgroundColor: const Color(0xffEE724B),
-                          textFieldTopSize:
-                              MediaQuery.of(context).padding.top + (MediaQuery.of(context).padding.bottom) + 20,
-                          //autocompleteLanguage: "ko",
-                          //region: 'au',
-                          //selectInitialPosition: true,
-                        );
+                  //         //forceSearchOnZoomChanged: true,
+                  //         automaticallyImplyAppBarLeading: false,
+                  //         appBarBackgroundColor: const Color(0xffEE724B),
+                  //         textFieldTopSize:
+                  //             MediaQuery.of(context).padding.top + (MediaQuery.of(context).padding.bottom) + 20,
+                  //         //autocompleteLanguage: "ko",
+                  //         //region: 'au',
+                  //         //selectInitialPosition: true,
+                  //       );
                       },
                     ),
                   );

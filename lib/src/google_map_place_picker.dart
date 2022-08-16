@@ -33,7 +33,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
     required this.appBarKey,
     this.selectedPlaceWidgetBuilder,
     this.pinBuilder,
-    this.height,
+   
     this.onSearchFailed,
     this.onMoveStart,
     this.onMapCreated,
@@ -53,7 +53,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
   }) : super(key: key);
 
   final CameraPosition initialCameraPosition;
-  final double? height;
+ 
   final GlobalKey appBarKey;
 
   final SelectedPlaceWidgetBuilder? selectedPlaceWidgetBuilder;

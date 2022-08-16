@@ -118,7 +118,7 @@ class PlacePicker extends StatefulWidget {
     this.semanticCounterText,
     this.alignLabelWithHint,
     this.constraints,
-    this.height,
+    required this.inputMargin,
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
   }) : super(key: key);
@@ -323,7 +323,7 @@ class PlacePicker extends StatefulWidget {
   final bool? alignLabelWithHint;
 
   final BoxConstraints? constraints;
-  final double? height;
+  final EdgeInsetsGeometry inputMargin;
 
   @override
   _PlacePickerState createState() => _PlacePickerState();
@@ -582,7 +582,7 @@ class _PlacePickerState extends State<PlacePicker> {
               semanticCounterText: widget.semanticCounterText,
               border: widget.border,
               isDense: widget.isDense,
-              inputHeight: widget.height,
+              inputMargin: widget.inputMargin,
               onPicked: (prediction) {
                 _pickPrediction(prediction);
               },
@@ -695,7 +695,6 @@ class _PlacePickerState extends State<PlacePicker> {
     return GoogleMapPlacePicker(
       initialCameraPosition: initialCameraPosition,
       appBarKey: appBarKey,
-      height: widget.height,
       selectedPlaceWidgetBuilder: widget.selectedPlaceWidgetBuilder,
       pinBuilder: widget.pinBuilder,
       onSearchFailed: widget.onGeocodingSearchFailed,

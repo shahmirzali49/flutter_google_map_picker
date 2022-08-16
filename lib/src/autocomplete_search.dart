@@ -17,7 +17,6 @@ class AutoCompleteSearch extends StatefulWidget {
     required this.appBarKey,
     this.hintText,
     this.searchingText = "Searching...",
-    this.height = 40,
     this.contentPadding = EdgeInsets.zero,
     this.debounceMilliseconds,
     this.onSearchFailed,
@@ -81,7 +80,7 @@ class AutoCompleteSearch extends StatefulWidget {
     this.semanticCounterText,
     this.alignLabelWithHint,
     this.constraints,
-    this.inputHeight,
+    required this.inputMargin,
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
   }) : super(key: key);
@@ -90,8 +89,7 @@ class AutoCompleteSearch extends StatefulWidget {
   final BorderRadiusGeometry? borderRadius;
   final String? hintText;
   final String? searchingText;
-  final double height;
-  final double? inputHeight;
+  final EdgeInsetsGeometry inputMargin;
   final EdgeInsetsGeometry contentPadding;
   final int? debounceMilliseconds;
   final ValueChanged<Prediction> onPicked;
@@ -249,12 +247,13 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     return ChangeNotifierProvider.value(
       value: provider,
       child: Container(
-        height: widget.inputHeight ?? widget.height,
-        margin: const EdgeInsets.only(
-          right: 5,
-          // bottom: 10.0,
-          // top: 10.0,
-        ),
+        // height: widget.inputHeight ?? widget.height,
+        margin: widget.inputMargin,
+        // const EdgeInsets.only(
+        //   right: 5,
+        //   // bottom: 10.0,
+        //   // top: 10.0,
+        // ),
         // RoundedFrame(
         // height: widget.height,
         // padding: const EdgeInsets.only(right: 10),

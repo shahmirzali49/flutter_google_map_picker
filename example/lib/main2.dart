@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
       // isInScaffoldBodyAndHasAppBar: false,
       // border: OutlineInputBorder(),
       // enabledBorder: OutlineInputBorder(),
-      height: 40.0,
+     inputMargin: EdgeInsets.all(5),
       strictbounds: false,
       // borderRadius: BorderRadius.circular(5.0),
       //usePlaceDetailSearch: true,
@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
 
       // border: OutlineInputBorder(),
       // enabledBorder: OutlineInputBorder(),
-      height: 38.0,
+     inputMargin: EdgeInsets.all(5),
       // borderRadius: BorderRadius.circular(5.0),
       // usePlaceDetailSearch: true,
       onPlacePicked: (result) {
