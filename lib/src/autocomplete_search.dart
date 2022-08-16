@@ -79,8 +79,7 @@ class AutoCompleteSearch extends StatefulWidget {
     this.enabled = true,
     this.semanticCounterText,
     this.alignLabelWithHint,
-    this.constraints,
-    required this.inputMargin,
+    this.constraints, 
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
   }) : super(key: key);
@@ -88,8 +87,7 @@ class AutoCompleteSearch extends StatefulWidget {
   final String? sessionToken;
   final BorderRadiusGeometry? borderRadius;
   final String? hintText;
-  final String? searchingText;
-  final EdgeInsetsGeometry inputMargin;
+  final String? searchingText; 
   final EdgeInsetsGeometry contentPadding;
   final int? debounceMilliseconds;
   final ValueChanged<Prediction> onPicked;
@@ -246,43 +244,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: provider,
-      child: Container(
-        // height: widget.inputHeight ?? widget.height,
-        margin: widget.inputMargin,
-        // const EdgeInsets.only(
-        //   right: 5,
-        //   // bottom: 10.0,
-        //   // top: 10.0,
-        // ),
-        // RoundedFrame(
-        // height: widget.height,
-        // padding: const EdgeInsets.only(right: 10),
-
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              spreadRadius: 3,
-            ),
-          ],
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
-        ),
-
-        // elevation: 8.0,
-        child: Row(
-          children: <Widget>[
-            // SizedBox(width: 10),
-            // Icon(Icons.search),
-            // SizedBox(width: 10),
-            Expanded(
-              child: _buildSearchTextField(),
-            ),
-            // _buildTextClearIcon(),
-          ],
-        ),
-      ),
+      child: _buildSearchTextField(),
     );
   }
 

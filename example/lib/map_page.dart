@@ -37,8 +37,7 @@ class MapPage extends ConsumerWidget {
         initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108), zoom: 13),
         useCurrentLocation: false,
         selectInitialPosition: true,
-        hintText: "Mahallle, sokak veya cadde ara",
-        inputMargin: EdgeInsets.all(5),
+        hintText: "Mahallle, sokak veya cadde ara", 
         
         onPlacePicked: (result) async {
           selectedPlace = result;

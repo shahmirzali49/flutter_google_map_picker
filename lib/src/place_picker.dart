@@ -117,8 +117,7 @@ class PlacePicker extends StatefulWidget {
     this.enabled = true,
     this.semanticCounterText,
     this.alignLabelWithHint,
-    this.constraints,
-    required this.inputMargin,
+    this.constraints, 
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
   }) : super(key: key);
@@ -322,8 +321,7 @@ class PlacePicker extends StatefulWidget {
 
   final bool? alignLabelWithHint;
 
-  final BoxConstraints? constraints;
-  final EdgeInsetsGeometry inputMargin;
+  final BoxConstraints? constraints; 
 
   @override
   _PlacePickerState createState() => _PlacePickerState();
@@ -581,8 +579,7 @@ class _PlacePickerState extends State<PlacePicker> {
               isCollapsed: widget.isCollapsed,
               semanticCounterText: widget.semanticCounterText,
               border: widget.border,
-              isDense: widget.isDense,
-              inputMargin: widget.inputMargin,
+              isDense: widget.isDense, 
               onPicked: (prediction) {
                 _pickPrediction(prediction);
               },
