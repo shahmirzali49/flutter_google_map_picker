@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     return PlacePicker(
       apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
       initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
-      contentPadding: EdgeInsets.zero,
+      autoCompleteContentPadding: EdgeInsets.zero,
       useCurrentLocation: true,
       textFieldTopSize: MediaQuery.of(context).padding.top,
       selectInitialPosition: true,
@@ -91,7 +91,10 @@ class _HomePageState extends State<HomePage> {
         color: Colors.amber,
       ),
     );
+
   }
+ 
+
 
   Widget _body() {
     return PlacePicker(
@@ -99,7 +102,7 @@ class _HomePageState extends State<HomePage> {
       initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
       useCurrentLocation: false, appBarBackgroundColor: Colors.blue,
       selectInitialPosition: true,
-      textFieldTopSize: 50, contentPadding: EdgeInsets.zero,
+      textFieldTopSize: 50, autoCompleteContentPadding: EdgeInsets.zero,
       hintText: "Mahallle, sokak veya cadde ara",
       // forceAndroidLocationManager: true,
 

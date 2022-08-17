@@ -38,7 +38,8 @@ class MapPage extends ConsumerWidget {
         useCurrentLocation: false,
         selectInitialPosition: true,
         hintText: "Mahallle, sokak veya cadde ara", 
-        contentPadding: EdgeInsets.zero,
+        autoCompleteContentPadding: EdgeInsets.zero,
+        // fillColor: ,
         onPlacePicked: (result) async {
           selectedPlace = result;
           log("${result?.addressComponents![0].longName}-");
