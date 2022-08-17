@@ -36,7 +36,7 @@ class PlacePicker extends StatefulWidget {
     this.searchingText,
     // this.searchBarHeight,
     this.resizeToAvoidBottomInset,
-    required this.contentPadding,
+    this.autoCompleteContentPadding,
     this.onAutoCompleteFailed,
     this.onGeocodingSearchFailed,
     this.proxyBaseUrl,
@@ -117,7 +117,7 @@ class PlacePicker extends StatefulWidget {
     this.enabled = true,
     this.semanticCounterText,
     this.alignLabelWithHint,
-    this.constraints, 
+    this.constraints,
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
   }) : super(key: key);
@@ -134,7 +134,7 @@ class PlacePicker extends StatefulWidget {
   final String? hintText;
   final String? searchingText;
   // final double searchBarHeight;
-  final EdgeInsetsGeometry contentPadding;
+  final EdgeInsetsGeometry? autoCompleteContentPadding;
   final void Function(LatLng)? googleMapOntap;
   final void Function()? onMoveStart;
   final ValueChanged<String>? onAutoCompleteFailed;
@@ -321,7 +321,7 @@ class PlacePicker extends StatefulWidget {
 
   final bool? alignLabelWithHint;
 
-  final BoxConstraints? constraints; 
+  final BoxConstraints? constraints;
 
   @override
   _PlacePickerState createState() => _PlacePickerState();
@@ -545,7 +545,7 @@ class _PlacePickerState extends State<PlacePicker> {
               floatingLabelStyle: widget.floatingLabelStyle,
               labelText: widget.labelText,
               labelStyle: widget.labelStyle,
-              contentPadding: widget.contentPadding,
+              contentPadding: widget.autoCompleteContentPadding,
               helperText: widget.helperText,
               helperStyle: widget.helperStyle,
               helperMaxLines: widget.helperMaxLines,
@@ -580,7 +580,7 @@ class _PlacePickerState extends State<PlacePicker> {
               isCollapsed: widget.isCollapsed,
               semanticCounterText: widget.semanticCounterText,
               border: widget.border,
-              isDense: widget.isDense, 
+              isDense: widget.isDense,
               onPicked: (prediction) {
                 _pickPrediction(prediction);
               },
@@ -600,7 +600,7 @@ class _PlacePickerState extends State<PlacePicker> {
               searchForInitialValue: widget.searchForInitialValue,
               autocompleteOnTrailingWhitespace: widget.autocompleteOnTrailingWhitespace),
         ),
-        SizedBox(width: 5),
+        SizedBox(width: 10),
       ],
     );
   }

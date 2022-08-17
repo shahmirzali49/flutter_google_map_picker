@@ -17,7 +17,7 @@ class AutoCompleteSearch extends StatefulWidget {
     required this.appBarKey,
     this.hintText,
     this.searchingText = "Searching...",
-    required this.contentPadding,
+    this.contentPadding = EdgeInsets.zero,
     this.debounceMilliseconds,
     this.onSearchFailed,
     required this.searchBarController,
@@ -79,7 +79,7 @@ class AutoCompleteSearch extends StatefulWidget {
     this.enabled = true,
     this.semanticCounterText,
     this.alignLabelWithHint,
-    this.constraints, 
+    this.constraints,
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
   }) : super(key: key);
@@ -87,8 +87,8 @@ class AutoCompleteSearch extends StatefulWidget {
   final String? sessionToken;
   final BorderRadiusGeometry? borderRadius;
   final String? hintText;
-  final String? searchingText; 
-  final EdgeInsetsGeometry contentPadding;
+  final String? searchingText;
+  final EdgeInsetsGeometry? contentPadding;
   final int? debounceMilliseconds;
   final ValueChanged<Prediction> onPicked;
   final ValueChanged<String>? onSearchFailed;
@@ -258,7 +258,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         // border: widget.border ?? InputBorder.none,
         border: widget.border ?? OutlineInputBorder(borderSide: BorderSide.none),
         isDense: true,
-        contentPadding: widget.contentPadding,
+        contentPadding: EdgeInsets.zero,
         alignLabelWithHint: widget.alignLabelWithHint,
         constraints: widget.constraints,
         hintStyle: widget.hintStyle,
@@ -287,7 +287,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         prefixIconConstraints: widget.prefixIconConstraints,
         counterText: widget.counterText,
         counterStyle: widget.counterStyle,
-        filled: widget.filled,
+        filled: true,
         fillColor: widget.fillColor,
         focusColor: widget.focusColor,
         hoverColor: widget.hoverColor,
