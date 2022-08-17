@@ -36,7 +36,7 @@ class PlacePicker extends StatefulWidget {
     this.searchingText,
     // this.searchBarHeight,
     this.resizeToAvoidBottomInset,
-    // this.contentPadding,
+    required this.contentPadding,
     this.onAutoCompleteFailed,
     this.onGeocodingSearchFailed,
     this.proxyBaseUrl,
@@ -134,9 +134,9 @@ class PlacePicker extends StatefulWidget {
   final String? hintText;
   final String? searchingText;
   // final double searchBarHeight;
-  // final EdgeInsetsGeometry contentPadding;
+  final EdgeInsetsGeometry contentPadding;
   final void Function(LatLng)? googleMapOntap;
-  void Function()? onMoveStart;
+  final void Function()? onMoveStart;
   final ValueChanged<String>? onAutoCompleteFailed;
   final ValueChanged<String>? onGeocodingSearchFailed;
   final int autoCompleteDebounceInMilliseconds;
@@ -545,6 +545,7 @@ class _PlacePickerState extends State<PlacePicker> {
               floatingLabelStyle: widget.floatingLabelStyle,
               labelText: widget.labelText,
               labelStyle: widget.labelStyle,
+              contentPadding: widget.contentPadding,
               helperText: widget.helperText,
               helperStyle: widget.helperStyle,
               helperMaxLines: widget.helperMaxLines,

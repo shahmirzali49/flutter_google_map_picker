@@ -64,14 +64,14 @@ class _HomePageState extends State<HomePage> {
 
     return PlacePicker(
       apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
-         initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
-
+      initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
+      contentPadding: EdgeInsets.zero,
       useCurrentLocation: true,
       textFieldTopSize: MediaQuery.of(context).padding.top,
       selectInitialPosition: true,
       // isInScaffoldBodyAndHasAppBar: false,
       // border: OutlineInputBorder(),
-      // enabledBorder: OutlineInputBorder(), 
+      // enabledBorder: OutlineInputBorder(),
       strictbounds: false,
       // borderRadius: BorderRadius.circular(5.0),
       //usePlaceDetailSearch: true,
@@ -96,21 +96,20 @@ class _HomePageState extends State<HomePage> {
   Widget _body() {
     return PlacePicker(
       apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
-     initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
+      initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
       useCurrentLocation: false, appBarBackgroundColor: Colors.blue,
       selectInitialPosition: true,
-      textFieldTopSize: 50,
+      textFieldTopSize: 50, contentPadding: EdgeInsets.zero,
       hintText: "Mahallle, sokak veya cadde ara",
       // forceAndroidLocationManager: true,
 
       // border: OutlineInputBorder(),
       // enabledBorder: OutlineInputBorder(),
-      
+
       // borderRadius: BorderRadius.circular(5.0),
       // usePlaceDetailSearch: true,
       onPlacePicked: (result) {
         // selectedPlace = result;
-        
 
         log("${result?.addressComponents![0].longName}-");
         // Navigator.of(context).pop();
