@@ -7,28 +7,47 @@ import 'package:google_maps_places_picker/google_maps_places_picker.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-final _heightProvider = StateProvider<double>((ref) => 0.0);
-final latLngProvider = StateProvider<LatLng?>((ref) => null);
+// final _heightProvider = StateProvider<double>((ref) => 0.0);
+// final latLngProvider = StateProvider<LatLng?>((ref) => null);
 
-class MapPage extends ConsumerWidget {
-  MapPage({Key? key}) : super(key: key);
+class MapPage extends ConsumerStatefulWidget {
+  const MapPage({Key? key}) : super(key: key);
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _MapPageState();
+}
+
+class _MapPageState extends ConsumerState<MapPage> {
   // double _height = 0;
   PickResult? selectedPlace;
   PanelController panelController = PanelController();
+  final emailController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return SlidingUpPanel(
-      maxHeight: 500,
+      maxHeight: 400,
       minHeight: 0,
       controller: panelController,
       panel: Scaffold(
-        body: InkWell(
-          onTap: () {
-            panelController.close();
-          },
-          child: Container(
-            color: Colors.lightBlue,
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Container(
+                  height: 100,
+                  color: Colors.lightBlue,
+                ),
+                TextFormField(),
+                TextFormField(),
+                TextFormField(
+                  // key: _formKey,
+                  controller: emailController,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -37,27 +56,22 @@ class MapPage extends ConsumerWidget {
         initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108), zoom: 13),
         useCurrentLocation: false,
         selectInitialPosition: true,
-        hintText: "Mahallle, sokak veya cadde ara", 
+        hintText: "Mahallle, sokak veya cadde ara",
+
         autoCompleteContentPadding: EdgeInsets.zero,
         // fillColor: ,
+        fillColor: Colors.white,
         onPlacePicked: (result) async {
           selectedPlace = result;
           log("${result?.addressComponents![0].longName}-");
 
-          ref.read(_heightProvider.state).state = 0.3;
-
-          ref
-              .refresh(latLngProvider.notifier)
-              .update((state) => state = LatLng(result!.geometry!.location.lat, result.geometry!.location.lng));
-
-          await Future.delayed(Duration(seconds: 1));
           panelController.open();
-
-          print("latLngProvider print -- ${ref.read(latLngProvider)?.latitude}");
+        },
+        googleMapOntap: (p0) {
+          panelController.close();
         },
         resizeToAvoidBottomInset: false,
         forceSearchOnZoomChanged: false,
-      
         isInScaffoldBodyAndHasAppBar: false,
         automaticallyImplyAppBarLeading: false,
         appBarBackgroundColor: Colors.indigo,

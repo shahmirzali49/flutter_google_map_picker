@@ -33,7 +33,6 @@ class GoogleMapPlacePicker extends StatelessWidget {
     required this.appBarKey,
     this.selectedPlaceWidgetBuilder,
     this.pinBuilder,
-   
     this.onSearchFailed,
     this.onMoveStart,
     this.onMapCreated,
@@ -53,7 +52,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
   }) : super(key: key);
 
   final CameraPosition initialCameraPosition;
- 
+
   final GlobalKey appBarKey;
 
   final SelectedPlaceWidgetBuilder? selectedPlaceWidgetBuilder;
@@ -164,14 +163,14 @@ class GoogleMapPlacePicker extends StatelessWidget {
               provider.mapController = controller;
               provider.setCameraPosition(null);
               provider.pinState = PinState.Idle;
-              
+
               // When select initialPosition set to true.
               if (selectInitialPosition!) {
                 provider.setCameraPosition(initialCameraPosition);
                 _searchByCameraLocation(provider, searchingState: SearchingState.FirstTime);
               }
             },
-            
+
             onCameraIdle: () {
               if (provider.isAutoCompleteSearching) {
                 provider.isAutoCompleteSearching = false;
@@ -320,10 +319,10 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
   Widget _defaultPlaceWidgetBuilder(BuildContext context, PickResult? data, SearchingState state) {
     return FloatingCard(
-      bottomPosition: MediaQuery.of(context).size.height * 0.01,
-      leftPosition: MediaQuery.of(context).size.width * 0.04,
-      rightPosition: MediaQuery.of(context).size.width * 0.04,
-      width: MediaQuery.of(context).size.width,
+      bottomPosition: 10,
+      leftPosition: 15,
+      rightPosition: 15,
+      width: double.maxFinite,
       borderRadius: BorderRadius.circular(12.0),
       // elevation: 4.0,
       color: Theme.of(context).cardColor,

@@ -333,16 +333,9 @@ class _PlacePickerState extends State<PlacePicker> {
   PlaceProvider? provider;
   SearchBarController searchBarController = SearchBarController();
 
-  late final double bottomPadding;
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (duration) {
-        bottomPadding = MediaQuery.of(context).padding.bottom;
-      },
-    );
 
     _futureProvider = _initPlaceProvider();
   }
@@ -406,10 +399,7 @@ class _PlacePickerState extends State<PlacePicker> {
 
                 bottomNavigationBar: Container(
                   padding: EdgeInsets.only(
-                    bottom: 20 +
-                        (bottomPadding != 0.0
-                            ? MediaQuery.of(context).padding.bottom / 3
-                            : MediaQuery.of(context).padding.bottom),
+                    bottom: 20,
                     left: 20,
                     right: 20,
                     top: 10,

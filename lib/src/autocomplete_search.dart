@@ -400,11 +400,10 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
 
     // final RenderBox? appBarRenderBox =
     //     widget.appBarKey.currentContext!.findRenderObject() as RenderBox?;
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
 
     overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        // ignore: unnecessary_null_comparison
+      builder: (context) => Positioned( 
         top: widget.textFieldTopSize,
         // widget.isInScaffoldBodyAndHasAppBar
         //     ? MediaQuery.of(context).size.height * widget.height / 20 * 0.1
@@ -413,8 +412,8 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         //     ? MediaQuery.of(context).size.height * widget.height / 50 * 0.1
         //     : MediaQuery.of(context).size.height * 0.10,
         // appBarRenderBox!.size.height,
-        left: screenWidth * 0.025,
-        right: screenWidth * 0.025,
+        left: 20,
+        right: 20,
         child: Material(
           elevation: 4.0,
           borderRadius: BorderRadius.circular(8.0),

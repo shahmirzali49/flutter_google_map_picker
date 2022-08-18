@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
       initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108)),
       autoCompleteContentPadding: EdgeInsets.zero,
       useCurrentLocation: true,
-      textFieldTopSize: MediaQuery.of(context).padding.top,
+      textFieldTopSize: 30,
       selectInitialPosition: true,
       // isInScaffoldBodyAndHasAppBar: false,
       // border: OutlineInputBorder(),
