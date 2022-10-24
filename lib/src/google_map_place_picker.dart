@@ -49,10 +49,11 @@ class GoogleMapPlacePicker extends StatelessWidget {
     this.language,
     this.forceSearchOnZoomChanged,
     this.hidePlaceDetailsWhenDraggingPin,
+    required this.polygons,
   }) : super(key: key);
 
   final CameraPosition initialCameraPosition;
-
+  final Set<Polygon>? polygons;
   final GlobalKey appBarKey;
 
   final SelectedPlaceWidgetBuilder? selectedPlaceWidgetBuilder;
@@ -159,6 +160,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
             myLocationEnabled: true,
             onTap: googleMapOntap,
+            polygons: polygons ?? {},
             onMapCreated: (GoogleMapController controller) {
               provider.mapController = controller;
               provider.setCameraPosition(null);

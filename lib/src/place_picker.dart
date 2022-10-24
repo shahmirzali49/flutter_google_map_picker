@@ -120,9 +120,11 @@ class PlacePicker extends StatefulWidget {
     this.constraints,
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
+    this.polygons,
   }) : super(key: key);
 
   final bool isInScaffoldBodyAndHasAppBar;
+  final Set<Polygon>? polygons;
   final String apiKey;
   final BorderRadiusGeometry? borderRadius;
   final CameraPosition initialCameraPosition;
@@ -182,6 +184,7 @@ class PlacePicker extends StatefulWidget {
   /// INPORTANT: If this is non-null, [onPlacePicked] will not be invoked, as there will be no default 'Select here' button.
   final SelectedPlaceWidgetBuilder? selectedPlaceWidgetBuilder;
 
+  
   /// optional - builds customized pin widget which indicates current pointing position.
   ///
   /// It is provided by default if you leave it as a null.
@@ -682,6 +685,7 @@ class _PlacePickerState extends State<PlacePicker> {
   Widget _buildMap(CameraPosition initialCameraPosition) {
     return GoogleMapPlacePicker(
       initialCameraPosition: initialCameraPosition,
+      polygons: widget.polygons,
       appBarKey: appBarKey,
       selectedPlaceWidgetBuilder: widget.selectedPlaceWidgetBuilder,
       pinBuilder: widget.pinBuilder,
