@@ -381,7 +381,7 @@ class _PlacePickerState extends State<PlacePicker> {
       child: FutureBuilder<PlaceProvider>(
         future: _futureProvider,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {  
+          if (snapshot.hasData) {
             provider = snapshot.data;
 
             return MultiProvider(
@@ -658,10 +658,11 @@ class _PlacePickerState extends State<PlacePicker> {
           future: provider!.updateCurrentLocation(widget.forceAndroidLocationManager),
           builder: (context, snap) {
             if (snap.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: CircularProgressIndicator(
-                color: Colors.indigo,
-              ));
+              return _buildMap(widget.initialCameraPosition);
+              // return const Center(
+              //     child: CircularProgressIndicator(
+              //   color: Colors.indigo,
+              // ));
             } else {
               if (provider!.currentPosition == null) {
                 return _buildMap(widget.initialCameraPosition);
@@ -680,14 +681,14 @@ class _PlacePickerState extends State<PlacePicker> {
       // return FutureBuilder(
       //   future: Future.delayed(Duration(milliseconds: 1)),
       //   builder: (context, snap) {
-          // if (snap.connectionState == ConnectionState.waiting) {
-          //   return const Center(
-          //       child: CircularProgressIndicator(
-          //     color: Colors.green,
-          //   ));
-          // } else {
-            // return _buildMap(widget.initialCameraPosition);
-          // }
+      // if (snap.connectionState == ConnectionState.waiting) {
+      //   return const Center(
+      //       child: CircularProgressIndicator(
+      //     color: Colors.green,
+      //   ));
+      // } else {
+      // return _buildMap(widget.initialCameraPosition);
+      // }
       //   },
       // );
     }
