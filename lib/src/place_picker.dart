@@ -184,7 +184,6 @@ class PlacePicker extends StatefulWidget {
   /// INPORTANT: If this is non-null, [onPlacePicked] will not be invoked, as there will be no default 'Select here' button.
   final SelectedPlaceWidgetBuilder? selectedPlaceWidgetBuilder;
 
-  
   /// optional - builds customized pin widget which indicates current pointing position.
   ///
   /// It is provided by default if you leave it as a null.
@@ -339,8 +338,14 @@ class _PlacePickerState extends State<PlacePicker> {
   @override
   void initState() {
     super.initState();
-
+    log("INITSTATE _PlacePickerState");
     _futureProvider = _initPlaceProvider();
+  }
+
+  @override
+  void didUpdateWidget(covariant PlacePicker oldWidget) {
+    log("DIDUPDATEWIDGET _PlacePickerState");
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -483,7 +488,9 @@ class _PlacePickerState extends State<PlacePicker> {
               )
             ]);
           } else {
-            children.add(CircularProgressIndicator(color: Colors.pink,));
+            children.add(CircularProgressIndicator(
+              color: Colors.pink,
+            ));
           }
 
           return Scaffold(
@@ -673,7 +680,10 @@ class _PlacePickerState extends State<PlacePicker> {
         future: Future.delayed(Duration(milliseconds: 1)),
         builder: (context, snap) {
           if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: Colors.green,));
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.green,
+            ));
           } else {
             return _buildMap(widget.initialCameraPosition);
           }
