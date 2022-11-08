@@ -676,19 +676,20 @@ class _PlacePickerState extends State<PlacePicker> {
             }
           });
     } else {
-      return FutureBuilder(
-        future: Future.delayed(Duration(milliseconds: 1)),
-        builder: (context, snap) {
-          if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: Colors.green,
-            ));
-          } else {
-            return _buildMap(widget.initialCameraPosition);
-          }
-        },
-      );
+      return _buildMap(widget.initialCameraPosition);
+      // return FutureBuilder(
+      //   future: Future.delayed(Duration(milliseconds: 1)),
+      //   builder: (context, snap) {
+          // if (snap.connectionState == ConnectionState.waiting) {
+          //   return const Center(
+          //       child: CircularProgressIndicator(
+          //     color: Colors.green,
+          //   ));
+          // } else {
+            // return _buildMap(widget.initialCameraPosition);
+          // }
+      //   },
+      // );
     }
   }
 
