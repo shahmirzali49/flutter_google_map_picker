@@ -343,7 +343,9 @@ class GoogleMapPlacePicker extends StatelessWidget {
         child: SizedBox(
           width: 24,
           height: 24,
-          child: CircularProgressIndicator(color: Colors.cyanAccent,),
+          child: CircularProgressIndicator(
+            color: Colors.cyanAccent,
+          ),
         ),
       ),
     );
@@ -391,7 +393,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
     return Positioned(
       // top: appBarRenderBox.size.height,
-      top: MediaQuery.of(context).size.height * 0.05,
+      top: 20,
+      // MediaQuery.of(context).size.height * 0.05,
       right: 15,
       child: Column(
         children: <Widget>[

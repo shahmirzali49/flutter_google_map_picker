@@ -381,7 +381,7 @@ class _PlacePickerState extends State<PlacePicker> {
       child: FutureBuilder<PlaceProvider>(
         future: _futureProvider,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData) {  
             provider = snapshot.data;
 
             return MultiProvider(
