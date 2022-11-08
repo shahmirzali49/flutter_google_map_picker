@@ -483,7 +483,7 @@ class _PlacePickerState extends State<PlacePicker> {
               )
             ]);
           } else {
-            children.add(CircularProgressIndicator());
+            children.add(CircularProgressIndicator(color: Colors.pink,));
           }
 
           return Scaffold(
@@ -673,7 +673,7 @@ class _PlacePickerState extends State<PlacePicker> {
         future: Future.delayed(Duration(milliseconds: 1)),
         builder: (context, snap) {
           if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: Colors.green,));
           } else {
             return _buildMap(widget.initialCameraPosition);
           }

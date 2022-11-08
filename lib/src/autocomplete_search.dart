@@ -403,7 +403,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     // final screenWidth = MediaQuery.of(context).size.width;
 
     overlayEntry = OverlayEntry(
-      builder: (context) => Positioned( 
+      builder: (context) => Positioned(
         top: widget.textFieldTopSize,
         // widget.isInScaffoldBodyAndHasAppBar
         //     ? MediaQuery.of(context).size.height * widget.height / 20 * 0.1
@@ -434,7 +434,10 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
           SizedBox(
             height: 24,
             width: 24,
-            child: CircularProgressIndicator(strokeWidth: 3),
+            child: CircularProgressIndicator(
+              strokeWidth: 10,
+              color: Colors.lime,
+            ),
           ),
           SizedBox(width: 24),
           Expanded(

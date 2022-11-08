@@ -343,7 +343,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
         child: SizedBox(
           width: 24,
           height: 24,
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(color: Colors.cyanAccent,),
         ),
       ),
     );
