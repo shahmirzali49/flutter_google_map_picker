@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
 
+// import 'package:app_settings/app_settings.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:system_settings/system_settings.dart';
 import '../src/models/pick_result.dart';
 import '../src/place_picker.dart';
-import 'package:google_maps_webservice/geocoding.dart';
-import 'package:google_maps_webservice/places.dart';
+import 'package:google_maps_webservice_ex/geocoding.dart';
+import 'package:google_maps_webservice_ex/places.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +51,9 @@ class PlaceProvider extends ChangeNotifier {
       await Geolocator.requestPermission();
       LocationPermission permission = await Geolocator.checkPermission();
       log("updateCurrentLocation ${permission.name}");
-      if (permission != LocationPermission.denied) {
+      if (permission != LocationPermission.denied &&
+          permission != LocationPermission.deniedForever &&
+          permission != LocationPermission.unableToDetermine) {
         currentPosition =
             await Geolocator.getCurrentPosition(desiredAccuracy: desiredAccuracy ?? LocationAccuracy.best);
         // await Future.delayed(const Duration(seconds: 3));
@@ -60,6 +65,13 @@ class PlaceProvider extends ChangeNotifier {
         log("Geolocator.getCurrentPosition currentPosition $currentPosition");
       } else {
         currentPosition = null;
+        await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+          await AppSettings.openLocationSettings(
+            asAnotherTask: true,
+          );
+        }
+
         print("ELSE PROBLEM ");
       }
     } catch (e) {
@@ -118,10 +130,16 @@ class PlaceProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
+  // final Completer<GoogleMapController> _controller =
+  //     Completer<GoogleMapController>();
+
+    
+
   GoogleMapController? _mapController;
   GoogleMapController? get mapController => _mapController;
   set mapController(GoogleMapController? controller) {
     _mapController = controller;
+  
     notifyListeners();
   }
 

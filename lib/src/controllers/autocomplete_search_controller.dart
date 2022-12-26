@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import '../autocomplete_search.dart';
 
 class SearchBarController extends ChangeNotifier {
-  late AutoCompleteSearchState _autoCompleteSearch;
+  late AutoCompleteSearchBarState _autoCompleteSearch;
 
-  attach(AutoCompleteSearchState searchWidget) {
+  attach(AutoCompleteSearchBarState searchWidget) {
     _autoCompleteSearch = searchWidget;
   }
 

@@ -5,21 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/geocoding.dart';
+import 'package:google_maps_webservice_ex/geocoding.dart';
+import 'package:google_maps_webservice_ex/places.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
+
 import '../google_maps_places_picker.dart';
 import '../providers/place_provider.dart';
 import '../src/autocomplete_search.dart';
 import '../src/controllers/autocomplete_search_controller.dart';
 import '../src/google_map_place_picker.dart';
 import '../src/utils/uuid.dart';
-import 'package:google_maps_webservice/places.dart';
-import 'package:http/http.dart';
-import 'package:provider/provider.dart';
-import 'dart:io' show Platform;
 
 enum PinState { Preparing, Idle, Dragging }
 
-enum SearchingState { Idle, Searching, FirstTime }
+enum SearchingState { Idle, Searching, FirstTime, ResultError, LocationIsNotInPolygons }
+
+// enum PlaceResultState { Searching, FirstTime, Success, ResultError, LocationIsNotInPolygons }
+
+typedef SelectPlaceButtonWidget = Widget Function(PickResult? pickResult, SearchingState searchingState);
 
 // enum ButtonState { Idle, Searching, FirstTime, UseThisAddress, VerifyAddress }
 
@@ -27,7 +31,6 @@ class PlacePicker extends StatefulWidget {
   PlacePicker({
     Key? key,
     required this.apiKey,
-    this.onPlacePicked,
     required this.initialCameraPosition,
     this.useCurrentLocation,
     this.desiredLocationAccuracy = LocationAccuracy.high,
@@ -49,7 +52,7 @@ class PlacePicker extends StatefulWidget {
     this.enableMapTypeButton = true,
     this.enableMyLocationButton = true,
     this.onMoveStart,
-    this.myLocationButtonCooldown = 10,
+    this.myLocationButtonCooldown = 3,
     this.usePinPointingSearch = true,
     this.usePlaceDetailSearch = false,
     required this.appBarBackgroundColor,
@@ -121,6 +124,9 @@ class PlacePicker extends StatefulWidget {
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
     this.polygons,
+    required this.pinIcon,
+    required this.appBarBackButtonButton,
+    this.selectPlaceButtonWidget,
   }) : super(key: key);
 
   final bool isInScaffoldBodyAndHasAppBar;
@@ -176,7 +182,8 @@ class PlacePicker extends StatefulWidget {
   ///
   /// If you managed to use your own [selectedPlaceWidgetBuilder], then this WILL NOT be invoked, and you need use data which is
   /// being sent with [selectedPlaceWidgetBuilder].
-  final ValueChanged<PickResult?>? onPlacePicked;
+  // final ValueChanged<PickResult?>? onPlacePicked;
+  final SelectPlaceButtonWidget? selectPlaceButtonWidget;
 
   /// optional - builds selected place's UI
   ///
@@ -325,6 +332,10 @@ class PlacePicker extends StatefulWidget {
 
   final BoxConstraints? constraints;
 
+  final Icon pinIcon;
+
+  final Widget appBarBackButtonButton;
+
   @override
   _PlacePickerState createState() => _PlacePickerState();
 }
@@ -401,67 +412,152 @@ class _PlacePickerState extends State<PlacePicker> {
                   elevation: 0,
                   backgroundColor: widget.appBarBackgroundColor,
                   titleSpacing: 0.0,
-                  title: _buildSearchBar(context),
+                  title: AutoCompleteSearchBar(
+                    appBarBackButtonButton: widget.appBarBackButtonButton,
+                    appBarKey: appBarKey,
+                    textFieldTopSize: widget.textFieldTopSize,
+                    isInScaffoldBodyAndHasAppBar: widget.isInScaffoldBodyAndHasAppBar,
+                    borderRadius: widget.borderRadius,
+                    searchBarController: searchBarController,
+                    sessionToken: provider!.sessionToken,
+                    hintText: widget.hintText,
+                    searchingText: widget.searchingText,
+                    debounceMilliseconds: widget.autoCompleteDebounceInMilliseconds,
+                    alignLabelWithHint: widget.alignLabelWithHint,
+                    constraints: widget.constraints,
+                    hintStyle: widget.hintStyle,
+                    hintTextDirection: widget.hintTextDirection,
+                    hintMaxLines: widget.hintMaxLines,
+                    errorText: widget.errorText,
+                    errorStyle: widget.errorStyle,
+                    errorMaxLines: widget.errorMaxLines,
+                    floatingLabelBehavior: widget.floatingLabelBehavior,
+                    floatingLabelAlignment: widget.floatingLabelAlignment,
+                    floatingLabelStyle: widget.floatingLabelStyle,
+                    labelText: widget.labelText,
+                    labelStyle: widget.labelStyle,
+                    contentPadding: widget.autoCompleteContentPadding,
+                    helperText: widget.helperText,
+                    helperStyle: widget.helperStyle,
+                    helperMaxLines: widget.helperMaxLines,
+                    suffixIcon: widget.suffixIcon,
+                    suffixText: widget.suffixText,
+                    suffixStyle: widget.suffixStyle,
+                    suffixIconColor: widget.suffixIconColor,
+                    suffixIconConstraints: widget.suffixIconConstraints,
+                    prefixIcon: widget.prefixIcon,
+                    prefixText: widget.prefixText,
+                    prefixStyle: widget.prefixStyle,
+                    prefixIconColor: widget.prefixIconColor,
+                    prefixIconConstraints: widget.prefixIconConstraints,
+                    counterText: widget.counterText,
+                    counterStyle: widget.counterStyle,
+                    filled: widget.filled,
+                    fillColor: widget.fillColor,
+                    focusColor: widget.focusColor,
+                    hoverColor: widget.hoverColor,
+                    errorBorder: widget.errorBorder,
+                    focusedBorder: widget.focusedBorder,
+                    focusedErrorBorder: widget.focusedErrorBorder,
+                    disabledBorder: widget.disabledBorder,
+                    enabledBorder: widget.enabledBorder,
+                    counter: widget.counter,
+                    enabled: widget.enabled,
+                    icon: widget.icon,
+                    iconColor: widget.iconColor,
+                    label: widget.label,
+                    prefix: widget.prefix,
+                    suffix: widget.suffix,
+                    isCollapsed: widget.isCollapsed,
+                    semanticCounterText: widget.semanticCounterText,
+                    border: widget.border,
+                    isDense: widget.isDense,
+                    onPicked: (prediction) {
+                      _pickPrediction(prediction);
+                    },
+                    onSearchFailed: (status) {
+                      if (widget.onAutoCompleteFailed != null) {
+                        widget.onAutoCompleteFailed!(status);
+                      }
+                    },
+                    autocompleteOffset: widget.autocompleteOffset,
+                    autocompleteRadius: widget.autocompleteRadius,
+                    autocompleteLanguage: widget.autocompleteLanguage,
+                    autocompleteComponents: widget.autocompleteComponents,
+                    autocompleteTypes: widget.autocompleteTypes,
+                    strictbounds: widget.strictbounds,
+                    region: widget.region,
+                    initialSearchString: widget.initialSearchString,
+                    searchForInitialValue: widget.searchForInitialValue,
+                    autocompleteOnTrailingWhitespace: widget.autocompleteOnTrailingWhitespace,
+                  ),
                 ),
                 body: _buildMapWithLocation(),
 
-                bottomNavigationBar: Container(
-                  padding: EdgeInsets.only(
-                    bottom: 20,
-                    left: 20,
-                    right: 20,
-                    top: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    // color: appColorScheme?.white50,
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, -1),
-                      ),
-                    ],
-                  ),
-                  child: Consumer<PlaceProvider>(builder: (context, placeProvider, _) {
-                    return ElevatedButton(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                        ),
+                bottomNavigationBar: widget.selectPlaceButtonWidget == null
+                    ? null
+                    : Consumer<PlaceProvider>(builder: (context, placeProvider, _) {
+                        return widget.selectPlaceButtonWidget!(
+                            placeProvider.selectedPlace, placeProvider.placeSearchingState);
+                      }),
 
-                        // fixedSize: MaterialStateProperty.all(
-                        //   Size(100, 100),
-                        // ),
-                        // minimumSize: MaterialStateProperty.all(
-                        //   Size(100, 100),
-                        // ),
-                        // maximumSize: MaterialStateProperty.all(
-                        //   Size(100, 100),
-                        // ),
-                        backgroundColor: placeProvider.placeSearchingState == SearchingState.Searching
-                            ? null
-                            : MaterialStateProperty.all(const Color(0xffEE724B)),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7.0),
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        "Bu Adresi Kullan",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      onPressed: placeProvider.placeSearchingState == SearchingState.Searching
-                          ? null
-                          : () {
-                              // searchByCameraLocationPLACEPICKER(provider!);
-                              print("CLICKED onPressed Bu Adresi Kullan");
-                              widget.onPlacePicked!(provider?.selectedPlace);
-                            },
-                    );
-                  }),
-                ),
+                // Container(
+                //   padding: EdgeInsets.only(
+                //     bottom: 20,
+                //     left: 20,
+                //     right: 20,
+                //     top: 10,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     // color: appColorScheme?.white50,
+                //     color: Colors.white,
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.grey.withOpacity(0.1),
+                //         blurRadius: 10,
+                //         offset: const Offset(0, -1),
+                //       ),
+                //     ],
+                //   ),
+                //   child:
+                // return ElevatedButton(
+                //   style: ButtonStyle(
+                //     padding: MaterialStateProperty.all(
+                //       EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                //     ),
+
+                //     // fixedSize: MaterialStateProperty.all(
+                //     //   Size(100, 100),
+                //     // ),
+                //     // minimumSize: MaterialStateProperty.all(
+                //     //   Size(100, 100),
+                //     // ),
+                //     // maximumSize: MaterialStateProperty.all(
+                //     //   Size(100, 100),
+                //     // ),
+                //     backgroundColor: placeProvider.placeSearchingState == SearchingState.Searching
+                //         ? null
+                //         : MaterialStateProperty.all(const Color(0xffEE724B)),
+                //     shape: MaterialStateProperty.all(
+                //       RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(7.0),
+                //       ),
+                //     ),
+                //   ),
+                //   child: Text(
+                //     "Bu Adresi Kullan",
+                //     style: TextStyle(fontSize: 16),
+                //   ),
+                //   onPressed: placeProvider.placeSearchingState == SearchingState.Searching
+                //       ? null
+                //       : () {
+                //           // searchByCameraLocationPLACEPICKER(provider!);
+                //           print("CLICKED onPressed Bu Adresi Kullan");
+                //           widget.onPlacePicked!(provider?.selectedPlace);
+                //         },
+                // );
+
+                // ),
 
                 //  SafeArea(
                 //   bottom: false,
@@ -507,103 +603,30 @@ class _PlacePickerState extends State<PlacePicker> {
     );
   }
 
-  Widget _buildSearchBar(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        SizedBox(width: 5),
-        IconButton(
-          onPressed: () => Navigator.maybePop(context),
-          icon: Icon(
-            Icons.clear_rounded,
-            size: 35,
-            color: Colors.white,
-          ),
-          padding: EdgeInsets.zero,
-        ),
-        SizedBox(width: 5),
-        Expanded(
-          child: AutoCompleteSearch(
-              appBarKey: appBarKey,
-              textFieldTopSize: widget.textFieldTopSize,
-              isInScaffoldBodyAndHasAppBar: widget.isInScaffoldBodyAndHasAppBar,
-              borderRadius: widget.borderRadius,
-              searchBarController: searchBarController,
-              sessionToken: provider!.sessionToken,
-              hintText: widget.hintText,
-              searchingText: widget.searchingText,
-              debounceMilliseconds: widget.autoCompleteDebounceInMilliseconds,
-              alignLabelWithHint: widget.alignLabelWithHint,
-              constraints: widget.constraints,
-              hintStyle: widget.hintStyle,
-              hintTextDirection: widget.hintTextDirection,
-              hintMaxLines: widget.hintMaxLines,
-              errorText: widget.errorText,
-              errorStyle: widget.errorStyle,
-              errorMaxLines: widget.errorMaxLines,
-              floatingLabelBehavior: widget.floatingLabelBehavior,
-              floatingLabelAlignment: widget.floatingLabelAlignment,
-              floatingLabelStyle: widget.floatingLabelStyle,
-              labelText: widget.labelText,
-              labelStyle: widget.labelStyle,
-              contentPadding: widget.autoCompleteContentPadding,
-              helperText: widget.helperText,
-              helperStyle: widget.helperStyle,
-              helperMaxLines: widget.helperMaxLines,
-              suffixIcon: widget.suffixIcon,
-              suffixText: widget.suffixText,
-              suffixStyle: widget.suffixStyle,
-              suffixIconColor: widget.suffixIconColor,
-              suffixIconConstraints: widget.suffixIconConstraints,
-              prefixIcon: widget.prefixIcon,
-              prefixText: widget.prefixText,
-              prefixStyle: widget.prefixStyle,
-              prefixIconColor: widget.prefixIconColor,
-              prefixIconConstraints: widget.prefixIconConstraints,
-              counterText: widget.counterText,
-              counterStyle: widget.counterStyle,
-              filled: widget.filled,
-              fillColor: widget.fillColor,
-              focusColor: widget.focusColor,
-              hoverColor: widget.hoverColor,
-              errorBorder: widget.errorBorder,
-              focusedBorder: widget.focusedBorder,
-              focusedErrorBorder: widget.focusedErrorBorder,
-              disabledBorder: widget.disabledBorder,
-              enabledBorder: widget.enabledBorder,
-              counter: widget.counter,
-              enabled: widget.enabled,
-              icon: widget.icon,
-              iconColor: widget.iconColor,
-              label: widget.label,
-              prefix: widget.prefix,
-              suffix: widget.suffix,
-              isCollapsed: widget.isCollapsed,
-              semanticCounterText: widget.semanticCounterText,
-              border: widget.border,
-              isDense: widget.isDense,
-              onPicked: (prediction) {
-                _pickPrediction(prediction);
-              },
-              onSearchFailed: (status) {
-                if (widget.onAutoCompleteFailed != null) {
-                  widget.onAutoCompleteFailed!(status);
-                }
-              },
-              autocompleteOffset: widget.autocompleteOffset,
-              autocompleteRadius: widget.autocompleteRadius,
-              autocompleteLanguage: widget.autocompleteLanguage,
-              autocompleteComponents: widget.autocompleteComponents,
-              autocompleteTypes: widget.autocompleteTypes,
-              strictbounds: widget.strictbounds,
-              region: widget.region,
-              initialSearchString: widget.initialSearchString,
-              searchForInitialValue: widget.searchForInitialValue,
-              autocompleteOnTrailingWhitespace: widget.autocompleteOnTrailingWhitespace),
-        ),
-        SizedBox(width: 10),
-      ],
-    );
-  }
+  // Widget _buildSearchBar(BuildContext context) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(),
+  //     child: Row(
+  //       children: <Widget>[
+  //         SizedBox(width: 5),
+  //         IconButton(
+  //           onPressed: () => Navigator.maybePop(context),
+  //           icon: Icon(
+  //             Icons.clear_rounded,
+  //             size: 35,
+  //             color: Colors.white,
+  //           ),
+  //           padding: EdgeInsets.zero,
+  //         ),
+  //         SizedBox(width: 5),
+  //         Expanded(
+  //           child:
+  //         ),
+  //         SizedBox(width: 10),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   _pickPrediction(Prediction prediction) async {
     provider!.placeSearchingState = SearchingState.Searching;
@@ -620,8 +643,11 @@ class _PlacePickerState extends State<PlacePicker> {
       }
       return;
     }
-
-    provider!.selectedPlace = PickResult.fromPlaceDetailResult(response.result);
+    if (response.result == null) {
+      provider?.placeSearchingState = SearchingState.ResultError;
+    } else {
+      provider!.selectedPlace = PickResult.fromPlaceDetailResult(response.result!);
+    }
 
     // Prevents searching again by camera movement.
     provider!.isAutoCompleteSearching = true;
@@ -713,6 +739,7 @@ class _PlacePickerState extends State<PlacePicker> {
       language: widget.autocompleteLanguage,
       forceSearchOnZoomChanged: widget.forceSearchOnZoomChanged,
       hidePlaceDetailsWhenDraggingPin: widget.hidePlaceDetailsWhenDraggingPin,
+      pinIcon: widget.pinIcon,
       onToggleMapType: () {
         provider!.switchMapType();
       },
@@ -735,7 +762,7 @@ class _PlacePickerState extends State<PlacePicker> {
           widget.onMoveStart!();
         }
       },
-      onPlacePicked: widget.onPlacePicked,
+      // onPlacePicked: widget.onPlacePicked,
     );
   }
 }

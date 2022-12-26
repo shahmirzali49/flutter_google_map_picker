@@ -26,8 +26,11 @@ class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
     return SlidingUpPanel(
-      maxHeight: 400,
+      maxHeight: 550,
       minHeight: 0,
+      parallaxEnabled: true,
+      isDraggable: false,
+      parallaxOffset: 0.45,
       controller: panelController,
       panel: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -54,18 +57,18 @@ class _MapPageState extends ConsumerState<MapPage> {
       body: PlacePicker(
         apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
         initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108), zoom: 13),
+        pinIcon: Icon(Icons.location_on, color: Colors.orange.shade900, size: 40),
+        appBarBackButtonButton: Icon(Icons.arrow_back, color: Colors.white),
         useCurrentLocation: false,
         selectInitialPosition: true,
-        hintText: "Mahallle, sokak veya cadde ara",
 
+        hintText: "Mahallle, sokak veya cadde ara",
+        myLocationButtonCooldown: 2,
         autoCompleteContentPadding: EdgeInsets.zero,
         // fillColor: ,
         fillColor: Colors.white,
-        onPlacePicked: (result) async {
-          selectedPlace = result;
-          log("${result?.addressComponents![0].longName}-");
-
-          panelController.open();
+        selectPlaceButtonWidget: (pickResult, searchingState) {
+          return const SizedBox.shrink();
         },
         googleMapOntap: (p0) {
           panelController.close();

@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_webservice_ex/places.dart';
 import '../google_maps_places_picker.dart';
 import '../providers/place_provider.dart';
 import '../providers/search_provider.dart';
 import '../src/components/prediction_tile.dart';
 import '../src/controllers/autocomplete_search_controller.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
 
-class AutoCompleteSearch extends StatefulWidget {
-  const AutoCompleteSearch({
+class AutoCompleteSearchBar extends StatefulWidget {
+  const AutoCompleteSearchBar({
     Key? key,
     required this.sessionToken,
     required this.onPicked,
@@ -82,6 +82,7 @@ class AutoCompleteSearch extends StatefulWidget {
     this.constraints,
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
+    required this.appBarBackButtonButton,
   }) : super(key: key);
   final bool isInScaffoldBodyAndHasAppBar;
   final String? sessionToken;
@@ -200,11 +201,13 @@ class AutoCompleteSearch extends StatefulWidget {
 
   final BoxConstraints? constraints;
 
+  final Widget appBarBackButtonButton;
+
   @override
-  AutoCompleteSearchState createState() => AutoCompleteSearchState();
+  AutoCompleteSearchBarState createState() => AutoCompleteSearchBarState();
 }
 
-class AutoCompleteSearchState extends State<AutoCompleteSearch> {
+class AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
   TextEditingController controller = TextEditingController();
   FocusNode focus = FocusNode();
   OverlayEntry? overlayEntry;
@@ -242,9 +245,25 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: provider,
-      child: _buildSearchTextField(),
+    return Row(
+      children: [
+        SizedBox(
+          width: 5,
+        ),
+        widget.appBarBackButtonButton,
+        SizedBox(
+          width: 5,
+        ),
+        Expanded(
+          child: ChangeNotifierProvider.value(
+            value: provider,
+            child: _buildSearchTextField(),
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+      ],
     );
   }
 
