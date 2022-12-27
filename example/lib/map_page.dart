@@ -56,7 +56,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       body: PlacePicker(
         apiKey: "AIzaSyCp0zCDL940M2F_NhLzs_frvm8cAZqV41U",
-        initialCameraPosition: CameraPosition(target: LatLng(-33.8567844, 151.213108), zoom: 13),
+        initialCameraPosition: CameraPosition(target: LatLng(40.9924115, 29.2175835), zoom: 11),
         pinIcon: Icon(Icons.location_on, color: Colors.orange.shade900, size: 40),
         appBarBackButtonButton: Icon(Icons.arrow_back, color: Colors.white),
         useCurrentLocation: false,

@@ -209,6 +209,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               }
 
               if (widget.polygonPoints != null && widget.polygonPoints!.isNotEmpty && provider.cameraPosition != null) {
+                print(" POLYGONLAR NULL DEGIL");
                 final isValid = widget.polygonPoints!.any(
                   (element) => maps_toolkit.PolygonUtil.containsLocation(
                     maps_toolkit.LatLng(
@@ -238,6 +239,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                   provider.placeSearchingState = SearchingState.LocationIsNotInPolygons;
                 }
               } else {
+                   print(" POLYGONLAR NULLDU");
                 // Perform search only if the setting is to true.
                 if (widget.usePinPointingSearch!) {
                   // Search current camera location only if camera has moved (dragged) before.
@@ -301,7 +303,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
     );
   }
 
-  Widget _buildFloatingCard () {
+  Widget _buildFloatingCard() {
     return Selector<PlaceProvider, Tuple4<PickResult?, SearchingState, bool, PinState>>(
       selector: (_, provider) =>
           Tuple4(provider.selectedPlace, provider.placeSearchingState, provider.isSearchBarFocused, provider.pinState),

@@ -16,6 +16,7 @@ import '../src/autocomplete_search.dart';
 import '../src/controllers/autocomplete_search_controller.dart';
 import '../src/google_map_place_picker.dart';
 import '../src/utils/uuid.dart';
+import 'package:maps_toolkit/maps_toolkit.dart' as maps_toolkit;
 
 enum PinState { Preparing, Idle, Dragging }
 
@@ -124,6 +125,7 @@ class PlacePicker extends StatefulWidget {
     this.borderRadius,
     this.isInScaffoldBodyAndHasAppBar = true,
     this.polygons,
+    this.polygonPoints,
     required this.pinIcon,
     required this.appBarBackButtonButton,
     this.selectPlaceButtonWidget,
@@ -131,6 +133,7 @@ class PlacePicker extends StatefulWidget {
 
   final bool isInScaffoldBodyAndHasAppBar;
   final Set<Polygon>? polygons;
+  final List<List<maps_toolkit.LatLng>>? polygonPoints;
   final String apiKey;
   final BorderRadiusGeometry? borderRadius;
   final CameraPosition initialCameraPosition;
@@ -496,10 +499,12 @@ class _PlacePickerState extends State<PlacePicker> {
 
                 bottomNavigationBar: widget.selectPlaceButtonWidget == null
                     ? null
-                    : Consumer<PlaceProvider>(builder: (context, placeProvider, _) {
-                        return widget.selectPlaceButtonWidget!(
-                            placeProvider.selectedPlace, placeProvider.placeSearchingState);
-                      }),
+                    : Consumer<PlaceProvider>(
+                        builder: (context, placeProvider, _) {
+                          return widget.selectPlaceButtonWidget!(
+                              placeProvider.selectedPlace, placeProvider.placeSearchingState);
+                        },
+                      ),
 
                 // Container(
                 //   padding: EdgeInsets.only(
@@ -724,6 +729,7 @@ class _PlacePickerState extends State<PlacePicker> {
     return GoogleMapPlacePicker(
       initialCameraPosition: initialCameraPosition,
       polygons: widget.polygons,
+      polygonPoints: [],
       appBarKey: appBarKey,
       selectedPlaceWidgetBuilder: widget.selectedPlaceWidgetBuilder,
       pinBuilder: widget.pinBuilder,
