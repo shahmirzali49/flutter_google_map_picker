@@ -23,7 +23,7 @@ class DefaultPinBuilderWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    state == PinState.Idle ? pinIcon : AnimatedPin(child: pinIcon),
+                    state == PinState.Dragging ? AnimatedPin(child: pinIcon) : pinIcon,
                     SizedBox(height: 42),
                   ],
                 ),

@@ -237,6 +237,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                   provider.pinState = PinState.Idle;
                 } else {
                   provider.placeSearchingState = SearchingState.LocationIsNotInPolygons;
+                  provider.pinState = PinState.Idle;
                 }
               } else {
                 print(" POLYGONLAR NULLDU");
@@ -310,8 +311,8 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       builder: (context, data, __) {
         if ((data.item1 == null && data.item2 == SearchingState.FirstTime) ||
             data.item3 == true ||
-            data.item4 == PinState.Dragging && this.widget.hidePlaceDetailsWhenDraggingPin!) {
-          log("builder if 1  ${data.item1} ${widget.selectedPlaceWidgetBuilder}");
+            data.item4 == PinState.Dragging && widget.hidePlaceDetailsWhenDraggingPin!) {
+          log("builder if 1 -> ${data.item1 == null && data.item2 == SearchingState.FirstTime} ||  ${data.item3 == true} || ${data.item4 == PinState.Dragging && this.widget.hidePlaceDetailsWhenDraggingPin!}");
           return SizedBox.shrink();
         } else {
           if (widget.selectedPlaceWidgetBuilder == null) {
