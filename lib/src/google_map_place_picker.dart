@@ -239,7 +239,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                   provider.placeSearchingState = SearchingState.LocationIsNotInPolygons;
                 }
               } else {
-                   print(" POLYGONLAR NULLDU");
+                print(" POLYGONLAR NULLDU");
                 // Perform search only if the setting is to true.
                 if (widget.usePinPointingSearch!) {
                   // Search current camera location only if camera has moved (dragged) before.
@@ -308,7 +308,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       selector: (_, provider) =>
           Tuple4(provider.selectedPlace, provider.placeSearchingState, provider.isSearchBarFocused, provider.pinState),
       builder: (context, data, __) {
-        if ((data.item1 == null) ||
+        if ((data.item1 == null && data.item2 == SearchingState.FirstTime) ||
             data.item3 == true ||
             data.item4 == PinState.Dragging && this.widget.hidePlaceDetailsWhenDraggingPin!) {
           log("Container ${data.item1} ${widget.selectedPlaceWidgetBuilder}");
