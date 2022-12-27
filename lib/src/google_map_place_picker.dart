@@ -311,11 +311,11 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
         if ((data.item1 == null && data.item2 == SearchingState.FirstTime) ||
             data.item3 == true ||
             data.item4 == PinState.Dragging && this.widget.hidePlaceDetailsWhenDraggingPin!) {
-          log("Container ${data.item1} ${widget.selectedPlaceWidgetBuilder}");
+          log("builder if 1  ${data.item1} ${widget.selectedPlaceWidgetBuilder}");
           return SizedBox.shrink();
         } else {
           if (widget.selectedPlaceWidgetBuilder == null) {
-            log("selectedPlaceWidgetBuilder ${widget.selectedPlaceWidgetBuilder}");
+            log("selectedPlaceWidgetBuilder == null ${widget.selectedPlaceWidgetBuilder}");
             return _defaultPlaceWidgetBuilder(context, data.item1, data.item2);
           } else {
             log("else selectedPlaceWidgetBuilder ${widget.selectedPlaceWidgetBuilder}");
