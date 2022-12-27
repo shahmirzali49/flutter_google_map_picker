@@ -729,7 +729,7 @@ class _PlacePickerState extends State<PlacePicker> {
     return GoogleMapPlacePicker(
       initialCameraPosition: initialCameraPosition,
       polygons: widget.polygons,
-      polygonPoints: [],
+      polygonPoints: widget.polygonPoints,
       appBarKey: appBarKey,
       selectedPlaceWidgetBuilder: widget.selectedPlaceWidgetBuilder,
       pinBuilder: widget.pinBuilder,
