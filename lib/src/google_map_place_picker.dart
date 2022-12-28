@@ -51,6 +51,8 @@ class GoogleMapPlacePicker extends StatefulWidget {
     required this.polygons,
     required this.pinIcon,
     this.polygonPoints,
+    required this.mapLayerIcon,
+    required this.onMyLocationIcon,
   }) : super(key: key);
 
   final CameraPosition initialCameraPosition;
@@ -81,6 +83,8 @@ class GoogleMapPlacePicker extends StatefulWidget {
   final bool? forceSearchOnZoomChanged;
   final bool? hidePlaceDetailsWhenDraggingPin;
   final Icon pinIcon;
+  final Icon mapLayerIcon;
+  final Icon onMyLocationIcon;
 
   final List<List<maps_toolkit.LatLng>>? polygonPoints;
 
@@ -178,7 +182,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             mapToolbarEnabled: false,
             initialCameraPosition: widget.initialCameraPosition,
             mapType: data,
-
+            zoomControlsEnabled: false,
             myLocationEnabled: true,
             onTap: widget.googleMapOntap,
             polygons: widget.polygons ?? {},
@@ -425,7 +429,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                 fillColor: Colors.white,
                 elevation: 8.0,
                 onPressed: widget.onToggleMapType,
-                child: Icon(Icons.layers),
+                child: widget.mapLayerIcon,
               ),
             ),
           SizedBox(height: 10),
@@ -438,7 +442,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                 fillColor: Colors.white,
                 elevation: 8.0,
                 onPressed: widget.onMyLocation,
-                child: Icon(Icons.my_location),
+                child: widget.onMyLocationIcon,
               ),
             ),
         ],

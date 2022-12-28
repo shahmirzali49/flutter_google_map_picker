@@ -129,6 +129,8 @@ class PlacePicker extends StatefulWidget {
     required this.pinIcon,
     required this.appBarBackButtonButton,
     this.selectPlaceButtonWidget,
+    required this.mapLayerIcon,
+    required this.onMyLocationIcon,
   }) : super(key: key);
 
   final bool isInScaffoldBodyAndHasAppBar;
@@ -338,6 +340,9 @@ class PlacePicker extends StatefulWidget {
   final Icon pinIcon;
 
   final Widget appBarBackButtonButton;
+
+  final Icon mapLayerIcon;
+  final Icon onMyLocationIcon;
 
   @override
   _PlacePickerState createState() => _PlacePickerState();
@@ -746,6 +751,8 @@ class _PlacePickerState extends State<PlacePicker> {
       forceSearchOnZoomChanged: widget.forceSearchOnZoomChanged,
       hidePlaceDetailsWhenDraggingPin: widget.hidePlaceDetailsWhenDraggingPin,
       pinIcon: widget.pinIcon,
+      mapLayerIcon:  widget.mapLayerIcon,
+      onMyLocationIcon: widget.onMyLocationIcon,
       onToggleMapType: () {
         provider!.switchMapType();
       },

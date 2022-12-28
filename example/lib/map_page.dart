@@ -65,6 +65,8 @@ class _MapPageState extends ConsumerState<MapPage> {
         hintText: "Mahallle, sokak veya cadde ara",
         myLocationButtonCooldown: 2,
         autoCompleteContentPadding: EdgeInsets.zero,
+        onMyLocationIcon: Icon(Icons.location_city),
+        mapLayerIcon: Icon(Icons.map),
         // fillColor: ,
         fillColor: Colors.white,
         selectPlaceButtonWidget: (pickResult, searchingState) {
