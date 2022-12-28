@@ -198,7 +198,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               }
             },
 
-            onCameraIdle: () {
+            onCameraIdle: () async {
               print("CAMERA IDLE - 1 -> ${provider.placeSearchingState} - 2 -> ${provider.pinState} ");
 
               if (provider.isAutoCompleteSearching) {
@@ -207,7 +207,9 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                 provider.placeSearchingState = SearchingState.Idle;
                 return;
               }
-
+              log("provider search state 1 -> ${provider.placeSearchingState}");
+              // await Future.delayed(Duration(seconds: 5));
+              // log("provider search state  2-> ${provider.placeSearchingState}");
               if (widget.polygonPoints != null && widget.polygonPoints!.isNotEmpty && provider.cameraPosition != null) {
                 print(" POLYGONLAR NULL DEGIL");
                 final isValid = widget.polygonPoints!.any(
@@ -233,7 +235,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                       });
                     }
                   }
-                  provider.placeSearchingState = SearchingState.Idle;
+
                   provider.pinState = PinState.Idle;
                 } else {
                   provider.placeSearchingState = SearchingState.LocationIsNotInPolygons;
@@ -254,7 +256,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                     });
                   }
                 }
-                provider.placeSearchingState = SearchingState.Idle;
+
                 provider.pinState = PinState.Idle;
               }
             },
@@ -342,7 +344,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
           ? SizedBox.shrink()
           : state == SearchingState.Searching
               ? _buildLoadingIndicator()
-              : _buildSelectionDetails(context, data!, state),
+              : _buildSelectionDetails(context, data, state),
     );
   }
 
@@ -361,44 +363,46 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
     );
   }
 
-  Widget _buildSelectionDetails(BuildContext context, PickResult result, SearchingState state) {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            state == SearchingState.ResultError
-                ? "Şuanda bir hata almaktasınız lutfen internetinizi kontrol edin veya imleçi tekrar haraket etdiriniz"
-                : state == SearchingState.LocationIsNotInPolygons
-                    ? "Suanda secili adresinize teslimat yapamıyoruz lutfen diger bir adres seciniz"
-                    : result.formattedAddress!,
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.center,
-          ),
+  Widget _buildSelectionDetails(BuildContext context, PickResult? result, SearchingState state) {
+    return result == null
+        ? SizedBox.shrink()
+        : Container(
+            margin: EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  state == SearchingState.ResultError
+                      ? "Şuanda bir hata almaktasınız lutfen internetinizi kontrol edin veya imleçi tekrar haraket etdiriniz"
+                      : state == SearchingState.LocationIsNotInPolygons
+                          ? "Suanda secili adresinize teslimat yapamıyoruz lutfen diger bir adres seciniz"
+                          : result.formattedAddress!,
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
 
-          // ElevatedButton(
-          //   style: ButtonStyle(
-          //     padding: MaterialStateProperty.all(
-          //       EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          //     ),
-          //     shape: MaterialStateProperty.all(
-          //       RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.circular(4.0),
-          //       ),
-          //     ),
-          //   ),
-          //   child: Text(
-          //     "Select here",
-          //     style: TextStyle(fontSize: 16),
-          //   ),
-          //   onPressed: () {
-          //     onPlacePicked!(result);
-          //   },
-          // ),
-        ],
-      ),
-    );
+                // ElevatedButton(
+                //   style: ButtonStyle(
+                //     padding: MaterialStateProperty.all(
+                //       EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                //     ),
+                //     shape: MaterialStateProperty.all(
+                //       RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(4.0),
+                //       ),
+                //     ),
+                //   ),
+                //   child: Text(
+                //     "Select here",
+                //     style: TextStyle(fontSize: 16),
+                //   ),
+                //   onPressed: () {
+                //     onPlacePicked!(result);
+                //   },
+                // ),
+              ],
+            ),
+          );
   }
 
   Widget _buildMapIcons(BuildContext context) {
