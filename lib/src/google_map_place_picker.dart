@@ -198,7 +198,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               // When select initialPosition set to true.
               if (widget.selectInitialPosition!) {
                 provider.setCameraPosition(widget.initialCameraPosition);
-                _searchByCameraLocation(provider, searchingState: SearchingState.FirstTime);
+                // _searchByCameraLocation(provider, searchingState: SearchingState.FirstTime);
               }
             },
 
@@ -226,24 +226,27 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                     true,
                   ),
                 );
-                if (isValid) {
-                  if (widget.usePinPointingSearch!) {
-                    // Search current camera location only if camera has moved (dragged) before.
-                    if (provider.pinState == PinState.Dragging) {
-                      // Cancel previous timer.
-                      if (provider.debounceTimer?.isActive ?? false) {
-                        provider.debounceTimer!.cancel();
+                if (provider.pinState == PinState.Dragging) {
+                  if (isValid) {
+                    print("POLYGONLAR null deyil");
+                    if (widget.usePinPointingSearch!) {
+                      // Search current camera location only if camera has moved (dragged) before.
+                      if (provider.pinState == PinState.Dragging) {
+                        // Cancel previous timer.
+                        if (provider.debounceTimer?.isActive ?? false) {
+                          provider.debounceTimer!.cancel();
+                        }
+                        provider.debounceTimer = Timer(Duration(milliseconds: widget.debounceMilliseconds!), () {
+                          _searchByCameraLocation(provider);
+                        });
                       }
-                      provider.debounceTimer = Timer(Duration(milliseconds: widget.debounceMilliseconds!), () {
-                        _searchByCameraLocation(provider);
-                      });
                     }
-                  }
 
-                  provider.pinState = PinState.Idle;
-                } else {
-                  provider.placeSearchingState = SearchingState.LocationIsNotInPolygons;
-                  provider.pinState = PinState.Idle;
+                    provider.pinState = PinState.Idle;
+                  } else {
+                    provider.placeSearchingState = SearchingState.LocationIsNotInPolygons;
+                    provider.pinState = PinState.Idle;
+                  }
                 }
               } else {
                 print(" POLYGONLAR NULLDU");
@@ -415,9 +418,9 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
 
     return Positioned(
       // top: appBarRenderBox.size.height,
-      top: 26,
+      top: 22,
       // MediaQuery.of(context).size.height * 0.05,
-      right: 17,
+      right: 15,
       child: Column(
         children: <Widget>[
           if (widget.enableMapTypeButton != null && widget.enableMapTypeButton!)
