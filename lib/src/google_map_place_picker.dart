@@ -217,7 +217,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               // await Future.delayed(Duration(seconds: 5));
               // log("provider search state  2-> ${provider.placeSearchingState}");
 
-              if ( provider.placeSearchingState != SearchingState.FirstTime &&
+              if (provider.placeSearchingState != SearchingState.FirstTime &&
                   widget.polygonPoints != null &&
                   widget.polygonPoints!.isNotEmpty &&
                   provider.cameraPosition != null) {
@@ -358,7 +358,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       borderRadius: BorderRadius.circular(12.0),
       // elevation: 4.0,
       color: Theme.of(context).cardColor,
-      child: state == SearchingState.FirstTime  || _mapInitializing
+      child: state == SearchingState.FirstTime || _mapInitializing
           ? SizedBox.shrink()
           : state == SearchingState.Searching
               ? _buildLoadingIndicator()
@@ -388,11 +388,11 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            state == SearchingState.ResultError || result == null
+            state == SearchingState.ResultError 
                 ? "Şuanda bir hata almaktasınız lutfen internetinizi kontrol edin veya imleçi tekrar haraket etdiriniz"
                 : state == SearchingState.LocationIsNotInPolygons
                     ? "Suanda secili adresinize teslimat yapamıyoruz lutfen diger bir adres seciniz"
-                    : result.formattedAddress!,
+                    : result!.formattedAddress!,
             style: TextStyle(fontSize: 18),
             textAlign: TextAlign.center,
           ),
