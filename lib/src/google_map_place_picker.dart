@@ -147,6 +147,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
   }
 
   bool _mapInitializing = true;
+  bool _firstTime = true;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +191,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               provider.mapController = controller;
               provider.setCameraPosition(null);
               provider.pinState = PinState.Idle;
-              await Future.delayed(Duration(milliseconds: 300));
+              await Future.delayed(Duration(milliseconds: 500));
               setState(() {
                 _mapInitializing = false;
               });
@@ -198,7 +199,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               // When select initialPosition set to true.
               if (widget.selectInitialPosition!) {
                 provider.setCameraPosition(widget.initialCameraPosition);
-                  provider.placeSearchingState = SearchingState.FirstTime;
+                provider.placeSearchingState = SearchingState.FirstTime;
                 // _searchByCameraLocation(provider, searchingState: SearchingState.FirstTime);
               }
             },
@@ -215,7 +216,11 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               log("provider search state 1 -> ${provider.placeSearchingState}");
               // await Future.delayed(Duration(seconds: 5));
               // log("provider search state  2-> ${provider.placeSearchingState}");
-              if (widget.polygonPoints != null && widget.polygonPoints!.isNotEmpty && provider.cameraPosition != null) {
+
+              if (!_firstTime &&
+                  widget.polygonPoints != null &&
+                  widget.polygonPoints!.isNotEmpty &&
+                  provider.cameraPosition != null) {
                 print(" POLYGONLAR NULL DEGIL");
                 final isValid = widget.polygonPoints!.any(
                   (element) => maps_toolkit.PolygonUtil.containsLocation(
@@ -249,7 +254,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                     provider.pinState = PinState.Idle;
                   }
                 }
-              } else {
+              } else if (!_firstTime) {
                 print(" POLYGONLAR NULLDU");
                 // Perform search only if the setting is to true.
                 if (widget.usePinPointingSearch!) {
@@ -266,6 +271,11 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                 }
 
                 provider.pinState = PinState.Idle;
+              }
+              if (_firstTime) {
+                setState(() {
+                  _firstTime = false;
+                });
               }
             },
             onCameraMoveStarted: () {
