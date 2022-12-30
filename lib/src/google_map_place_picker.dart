@@ -191,10 +191,6 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               provider.mapController = controller;
               provider.setCameraPosition(null);
               provider.pinState = PinState.Idle;
-              await Future.delayed(Duration(milliseconds: 500));
-              setState(() {
-                _mapInitializing = false;
-              });
 
               // When select initialPosition set to true.
               if (widget.selectInitialPosition!) {
@@ -202,6 +198,10 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                 provider.placeSearchingState = SearchingState.FirstTime;
                 // _searchByCameraLocation(provider, searchingState: SearchingState.FirstTime);
               }
+              await Future.delayed(Duration(milliseconds: 500));
+              setState(() {
+                _mapInitializing = false;
+              });
             },
 
             onCameraIdle: () async {
@@ -217,7 +217,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               // await Future.delayed(Duration(seconds: 5));
               // log("provider search state  2-> ${provider.placeSearchingState}");
 
-              if (!_firstTime &&
+              if ( provider.placeSearchingState != SearchingState.FirstTime &&
                   widget.polygonPoints != null &&
                   widget.polygonPoints!.isNotEmpty &&
                   provider.cameraPosition != null) {
@@ -254,7 +254,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                     provider.pinState = PinState.Idle;
                   }
                 }
-              } else if (!_firstTime) {
+              } else if (provider.placeSearchingState != SearchingState.FirstTime) {
                 print(" POLYGONLAR NULLDU");
                 // Perform search only if the setting is to true.
                 if (widget.usePinPointingSearch!) {
@@ -358,7 +358,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       borderRadius: BorderRadius.circular(12.0),
       // elevation: 4.0,
       color: Theme.of(context).cardColor,
-      child: state == SearchingState.FirstTime
+      child: state == SearchingState.FirstTime  || _mapInitializing
           ? SizedBox.shrink()
           : state == SearchingState.Searching
               ? _buildLoadingIndicator()
