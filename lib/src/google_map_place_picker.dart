@@ -198,6 +198,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
               // When select initialPosition set to true.
               if (widget.selectInitialPosition!) {
                 provider.setCameraPosition(widget.initialCameraPosition);
+                  provider.placeSearchingState = SearchingState.FirstTime;
                 // _searchByCameraLocation(provider, searchingState: SearchingState.FirstTime);
               }
             },
@@ -371,45 +372,43 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
   }
 
   Widget _buildSelectionDetails(BuildContext context, PickResult? result, SearchingState state) {
-    return result == null
-        ? SizedBox.shrink()
-        : Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  state == SearchingState.ResultError
-                      ? "Şuanda bir hata almaktasınız lutfen internetinizi kontrol edin veya imleçi tekrar haraket etdiriniz"
-                      : state == SearchingState.LocationIsNotInPolygons
-                          ? "Suanda secili adresinize teslimat yapamıyoruz lutfen diger bir adres seciniz"
-                          : result.formattedAddress!,
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            state == SearchingState.ResultError || result == null
+                ? "Şuanda bir hata almaktasınız lutfen internetinizi kontrol edin veya imleçi tekrar haraket etdiriniz"
+                : state == SearchingState.LocationIsNotInPolygons
+                    ? "Suanda secili adresinize teslimat yapamıyoruz lutfen diger bir adres seciniz"
+                    : result.formattedAddress!,
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
 
-                // ElevatedButton(
-                //   style: ButtonStyle(
-                //     padding: MaterialStateProperty.all(
-                //       EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                //     ),
-                //     shape: MaterialStateProperty.all(
-                //       RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(4.0),
-                //       ),
-                //     ),
-                //   ),
-                //   child: Text(
-                //     "Select here",
-                //     style: TextStyle(fontSize: 16),
-                //   ),
-                //   onPressed: () {
-                //     onPlacePicked!(result);
-                //   },
-                // ),
-              ],
-            ),
-          );
+          // ElevatedButton(
+          //   style: ButtonStyle(
+          //     padding: MaterialStateProperty.all(
+          //       EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          //     ),
+          //     shape: MaterialStateProperty.all(
+          //       RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(4.0),
+          //       ),
+          //     ),
+          //   ),
+          //   child: Text(
+          //     "Select here",
+          //     style: TextStyle(fontSize: 16),
+          //   ),
+          //   onPressed: () {
+          //     onPlacePicked!(result);
+          //   },
+          // ),
+        ],
+      ),
+    );
   }
 
   Widget _buildMapIcons(BuildContext context) {
