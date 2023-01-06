@@ -388,7 +388,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            state == SearchingState.ResultError 
+            state == SearchingState.ResultError
                 ? "Şuanda bir hata almaktasınız lutfen internetinizi kontrol edin veya imleçi tekrar haraket etdiriniz"
                 : state == SearchingState.LocationIsNotInPolygons
                     ? "Suanda secili adresinize teslimat yapamıyoruz lutfen diger bir adres seciniz"
